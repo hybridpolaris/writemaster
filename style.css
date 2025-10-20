@@ -63,7 +63,6 @@ code {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  
 }
 .userface {
   display: flex;
@@ -77,10 +76,11 @@ code {
   padding: 20px;
   flex-grow: 1;
 }
-.box,.big.box {
-  -webkit-box-shadow: 0 0 33px 4px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0 0 33px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 33px 4px rgba(0, 0, 0, 0.4);
+.box,
+.big.box {
+  -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 .box {
   width: fit-content;
@@ -96,13 +96,13 @@ code {
   overflow-wrap: break-word; /* Wraps long content */
 }
 .big.box {
-  width: 80%;
+  width: 100%;
   height: 100%;
   border: none;
   border-radius: 10px;
   padding: 10px;
   background-color: #ffffff !important;
-  margin: 20px;
+  margin: 10px;
 }
 textarea {
   width: 95%;
@@ -118,18 +118,17 @@ textarea.big {
   height: 10em;
 }
 .selector {
-  background-color: #0090ff;
+  background-color: var(--accent-color);
   color: whitesmoke;
-  margin: 3px;
-  padding:3px;
+  margin: 5px;
+  padding: 3px;
   border-radius: 6px;
   border: none;
   /*font-size: larger;*/
   cursor: pointer;
 }
 .selector:hover {
-  background-color: #006dc1;
-  transform: scale(0.8);
+  background-color: var(--accent-color-button-pressed);
 }
 table {
   width: 100%;
@@ -168,72 +167,40 @@ th {
   background-color: #f4f4f4; /* Light gray header background */
   font-weight: bold;
 }
-#contest,
-#format,
-#ielts,
 .selector,
 img {
   user-select: none;
 }
-.header {
-  display: grid;
-  grid-template: "a . b . c" 100%/5% 25% 40% 20% 10%;
-}
-.header > .left {
-  grid-area: a;
-}
-.header > .mid {
-  grid-area: b;
-}
-.header > .right {
-  grid-area: c;
-}
+
+
 /* Add alternating row colors for better readability */
 tr:nth-child(even) {
   background-color: #f9f9f9;
-}
-.fullwidth {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  width: 100%;
-  
-  transform: translateX(-2.5%);
-}
-.fullwidth p{
-  padding:0;
-  margin:0;
-}
-.fullwidth > .selector {
-  padding:3px;
-  margin:0;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  color: black;
-  background-color: rgba(0, 0, 0, 0);
-}
-.fullwidth > .selector:hover {
-  color: black;
-  transform: none; /*to avoid padding issues*/
-  background-color: rgba(0, 0, 0, 0.2);
 }
 #submit-btn {
   display: flex;
   align-items: center;
   gap: 6px; /* spacing between text and icon */
 }
+.seperator{
+  height:1px;
+  border:1px solid lightgray;
+  margin-top:5px;
+  margin-bottom:5px ;
+}
 .loader {
-  margin: 5px;
-  width: 24px;
-  height: 24px;
-  border: 6px solid #000;
-  border-bottom-color: transparent;
-  /*border-top-color: transparent;*/
+  margin: 0px;
+  margin-right: 6px;
+  width: 1em;
+  height: 1em;
+  border: 2.5px dotted black;
+  cursor:progress;
+  /*border-left-color: transparent;
+  border-right-color: transparent;*/
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
-  animation: rotation 450ms linear infinite;
+  animation: rotation 1s linear infinite;
 }
 img {
   transform: scale(0.9);
@@ -274,4 +241,159 @@ header {
   .header {
     grid-template: "a . c" 100%/15% 30% 55% !important;
   }
+}
+.main_grid {
+  display: grid;
+  grid-template-columns: 50px 1.6fr 1fr;
+  grid-template-rows: 1.5fr 0.5fr;
+  gap: 20px 20px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "left_bar user_interface generate_test"
+    "left_bar user_interface try_our_gpt";
+}
+*{
+  --accent-color-hover:#88cbff;
+  --accent-color:#0090ff;
+  --accent-color-button-pressed:#006dc1;
+
+}
+.left_bar {
+  grid-area: left_bar;
+  display: flex;
+  flex-direction: column;
+}
+.option{
+  border-radius: 5px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.option:hover{
+  background-color: var(--accent-color-hover);
+  /*color:white;*/
+  cursor:pointer;
+}
+.selected.option{
+  background-color: var(--accent-color);
+  color: whitesmoke;
+}
+.user_interface {
+  grid-area: user_interface;
+}
+
+.generate_test {
+  grid-area: generate_test;
+}
+select{
+  border:none;
+}
+
+.try_our_gpt {
+  grid-area: try_our_gpt;
+}
+.test_format{
+  position: relative;
+  cursor:pointer;
+  
+}
+.test_format input{
+  opacity:0;
+  position:absolute;
+  width: 100%;
+  height: 100%;
+}
+
+
+/*this segment may torture readers*/
+.test_format input#ielts:checked + .tf_inner#ielts_tf_sel_inner{
+  background-color: var(--accent-color);
+  border:1px solid var(--accent-color);
+  color:white;
+}
+.test_format input#toeic:checked + .tf_inner#toeic_tf_sel_inner{
+  background-color: var(--accent-color);
+  border:1px solid var(--accent-color);
+  color:white;
+}
+/*I don't understand why, but using :hover directly doesn't work.
+To quote someone: "...[it] wouldn't start. Words cannot describe my [__] confusion."
+*/
+.test_format#ielts_tf_sel_outer:hover>.tf_inner#ielts_tf_sel_inner{
+background-color: var(--accent-color-hover);
+  border:1px solid var(--accent-color-hover);
+}
+.test_format#toeic_tf_sel_outer:hover>.tf_inner#toeic_tf_sel_inner{
+background-color: var(--accent-color-hover);
+  border:1px solid var(--accent-color-hover);
+}
+.tf_inner{
+  padding:10px;
+  border-radius: 10px;
+  border:1px solid black;
+  width:fit-content;
+}
+
+/*This section was copied from W3 schools and then modified.*/
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 40px;
+  height: 22px;
+  z-index:999;
+  position:relative;
+}
+.option2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  margin:10px;
+  height:fit-content;
+  gap: 10px;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: var(--accent-color);
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px var(--accent-color);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
 }

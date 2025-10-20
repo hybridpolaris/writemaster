@@ -27,10 +27,11 @@
         font-family: "Material Symbols Outlined";
       }
     </style>
+    
   </head>
   <body>
     <div class="main">
-      <header>
+      <!--<header>
         <div id="header">
           <div class="header">
             <div class="left" style="size: 200%">
@@ -44,21 +45,89 @@
             </div>
           </div>
         </div>
-      </header>
-      <div class="userface">
-        <div class="big box">
-          This is a box.<br />I like it.<br /><br />
-          <span class="selector">This is a button.</span>Unified styles are
-          great.<br><span class="loader"></span>Thinking...
+      </header>-->
+      <div class="userface main_grid">
+        <div class="big box left_bar">
+          <img src="Picture\Logo.png" alt="Logo" />
+          <div class="seperator"></div>
+          <div class="option selected">
+            <span class="material-symbols-outlined"> home </span>
+          </div>
+          <div class="seperator"></div>
+          <div class="option">
+            <span class="material-symbols-outlined"> settings </span>
+          </div>
+          <div class="seperator"></div>
+          <div class="option">
+            <span class="material-symbols-outlined"> chart_data </span>
+          </div>
+        </div>
+        <div class="big box user_interface" style="overflow-y:scroll">
+          <h1>Dashboard</h1>
+          <div class="seperator"></div>
+          <h3>Your performance</h3>
+          <div style="width:100%;aspect-ratio: 2/1;">
+            <canvas id="perfchart"></canvas>
+          </div>
+        </div>
+        <div class="big box generate_test">
+          <h3>Generate Exam</h3>
+          <div class="option2" style="width: fit-content">
+            <div class="test_format" id="ielts_tf_sel_outer">
+              <input type="radio" name="test_format" id="ielts" />
+              <div class="tf_inner" id="ielts_tf_sel_inner">IELTS</div>
+            </div>
+            <div class="test_format" id="toeic_tf_sel_outer">
+              <input type="radio" name="test_format" id="toeic" />
+              <div class="tf_inner" id="toeic_tf_sel_inner">TOEIC</div>
+            </div>
+          </div>
+          <div class="option2">
+            <div class="label">Include Reading</div>
+            <div class="switch_container">
+              <div class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+          <div class="option2">
+            <div class="label">Include Listening</div>
+            <div class="switch_container">
+              <div class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+          <div class="option2">
+            <div class="label">Include Writing</div>
+            <div class="switch_container">
+              <div class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+          <button class="selector">
+            <span style="font-size: larger; font-weight: bolder; padding: 10px"
+              >Generate</span
+            >
+          </button>
+        </div>
+        <div class="big box try_our_gpt">
+          This is where I would put the AI chat button<br>
+          <span style="font-weight:bolder">IF I HAD ONE</span>
         </div>
       </div>
     </div>
     <div></div>
   </body>
-
+  <script
+      src="https://cdn.jsdelivr.net/npm/chart.js"
+            crossorigin="anonymous"
+      referrerpolicy="no-referrer" 
+    ></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="script.js"></script>
-  <script>
-    //removed
-  </script>
 </html>
