@@ -304,7 +304,9 @@ select{
   height: 100%;
 }
 
-
+input#ielts,input#toeic{
+  cursor:pointer;
+}
 /*this segment may torture readers*/
 .test_format input#ielts:checked + .tf_inner#ielts_tf_sel_inner{
   background-color: var(--accent-color);
@@ -317,7 +319,6 @@ select{
   color:white;
 }
 /*I don't understand why, but using :hover directly doesn't work.
-To quote someone: "...[it] wouldn't start. Words cannot describe my [__] confusion."
 */
 .test_format#ielts_tf_sel_outer:hover>.tf_inner#ielts_tf_sel_inner{
 background-color: var(--accent-color-hover);
@@ -332,6 +333,7 @@ background-color: var(--accent-color-hover);
   border-radius: 10px;
   border:1px solid black;
   width:fit-content;
+  
 }
 
 /*This section was copied from W3 schools and then modified.*/
