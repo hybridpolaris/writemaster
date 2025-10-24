@@ -85,6 +85,34 @@ TOEIC_Slider.addEventListener("input",()=>{
 IELTS_Slider.addEventListener("input",()=>{
   IELTS_Score.innerHTML=`Band ${IELTS_Slider.value/2}`
 })
+let GenerateTest=document.getElementById("generate_test")
+let Errors=document.getElementById("errors")
+let IncludeListening=document.getElementById("include_listening")
+let IncludeWriting=document.getElementById("include_writing")
+let IncludeReading=document.getElementById("include_reading")
+GenerateTest.addEventListener("click",()=>{
+  var HasListening=IncludeListening.checked;
+  var HasReading=IncludeReading.checked;
+  var HasWriting=IncludeWriting.checked;
+  Errors.innerHTML="";
+  if(!(HasListening||HasReading||HasWriting)){
+    Errors.innerHTML="You must select at least one skill to practice!";
+  }
+  var selected = document.querySelector('input[name="test_format"]:checked');
+  
+  if(selected){
+    var TypeOfTest=selected.id;
+  }else{
+    Errors.innerHTML="You must select one type of test!";
+    return;
+  }
+  console.log("===TEST DATA===");
+  console.log(`Type: ${TypeOfTest}`);
+  console.log(`Include Listening: ${HasListening?"YES":"NO"}`)
+  console.log(`Include Reading: ${HasReading?"YES":"NO"}`)
+  console.log(`Include Writing: ${HasWriting?"YES":"NO"}`)
+  console.log(`Desired Target: ${TypeOfTest=="ielts"?`Band ${IELTS_Slider.value/2}`:`${Math.round(TOEIC_Slider.value/10)*10} points`}`)
+})
 /*UI.addEventListener('scroll', () => {
   const containerRect = container.getBoundingClientRect();
   [main,pref,stat].forEach(
