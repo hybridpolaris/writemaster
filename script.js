@@ -84,6 +84,7 @@ let Errors = document.getElementById("errors");
 let IncludeListening = document.getElementById("include_listening");
 let IncludeWriting = document.getElementById("include_writing");
 let IncludeReading = document.getElementById("include_reading");
+let WhetherTargetsMatter = true;
 GenerateTest.addEventListener("click", () => {
   var selected = document.querySelector('input[name="test_format"]:checked');
 
@@ -107,13 +108,28 @@ GenerateTest.addEventListener("click", () => {
   console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
   console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
-  console.log(
-    `Desired Target: ${
-      TypeOfTest == "ielts"
-        ? `Band ${IELTS_Slider.value}`
-        : `${TOEIC_Slider.value} points`
-    }`
-  );
+  if (WhetherTargetsMatter) {
+    console.log(
+      `Desired Target: ${
+        TypeOfTest == "ielts"
+          ? `Band ${IELTS_Slider.value}`
+          : `${TOEIC_Slider.value} points`
+      }`
+    );
+  }
+});
+let SetTargets = document.getElementById("set_targets");
+let SliderMessage = document.getElementById("whether_targets_matter");
+SetTargets.addEventListener("change", () => {
+  WhetherTargetsMatter = SetTargets.checked;
+  IELTS_Slider.disabled = !WhetherTargetsMatter;
+  TOEIC_Slider.disabled = !WhetherTargetsMatter;
+  if (WhetherTargetsMatter) {
+    SliderMessage.innerHTML = "";
+  } else {
+    SliderMessage.innerHTML =
+      "You must enable Set Targets for these sliders to apply.";
+  }
 });
 /*UI.addEventListener('scroll', () => {
   const containerRect = container.getBoundingClientRect();

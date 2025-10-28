@@ -60,14 +60,6 @@
           <div class="option" id="stat_menu_selector">
             <span class="material-symbols-outlined"> chart_data </span>
           </div>
-          <div class="seperator narrow_only"></div>
-          <div class="option narrow_only" id="test_menu_selector">
-            <span class="material-symbols-outlined"> assignment </span>
-          </div>
-          <div class="seperator narrow_only"></div>
-          <div class="option narrow_only" id="chat_menu_selector">
-            <span class="material-symbols-outlined"> chat </span>
-          </div>
         </div>
         <div
           class="big box user_interface"
@@ -84,10 +76,10 @@
           <div class="seperator" id="pref_menu_spos"></div>
           <h3>Prefrences</h3>
           <div class="option2">
-            <div class="label">Option A</div>
+            <div class="label">Set targets</div>
             <div class="switch_container">
               <div class="switch">
-                <input type="checkbox" />
+                <input type="checkbox" id="set_targets" checked />
                 <span class="slider"></span>
               </div>
             </div>
@@ -110,6 +102,11 @@
               </div>
             </div>
           </div>
+          <span
+            id="whether_targets_matter"
+            style="font-weight: bolder; color: red"
+          ></span
+          ><br />
           Your desired band target (for IELTS):
           <span id="ielts_score" style="font-weight: bolder"></span><br />
           <input
@@ -141,7 +138,7 @@
           ETA: 1 month
           <div class="seperator" id="end_menu_spos"></div>
         </div>
-        <div class="big box generate_test wide_only">
+        <div class="big box generate_test">
           <h3>Generate Exam</h3>
           <div class="option2" style="width: fit-content">
             <div class="test_format" id="ielts_tf_sel_outer">
@@ -153,7 +150,7 @@
               <div class="tf_inner" id="toeic_tf_sel_inner">TOEIC</div>
             </div>
           </div>
-          <div class="option2">
+          <div class="option2 vertical_when_narrow">
             <div class="label">Include Reading</div>
             <div class="switch_container">
               <div class="switch">
@@ -162,7 +159,7 @@
               </div>
             </div>
           </div>
-          <div class="option2">
+          <div class="option2 vertical_when_narrow">
             <div class="label">Include Listening</div>
             <div class="switch_container">
               <div class="switch">
@@ -171,7 +168,7 @@
               </div>
             </div>
           </div>
-          <div class="option2">
+          <div class="option2 vertical_when_narrow">
             <div class="label">Include Writing</div>
             <div class="switch_container">
               <div class="switch">
@@ -188,7 +185,7 @@
             >
           </button>
         </div>
-        <div class="big box try_our_gpt wide_only">
+        <div class="big box try_our_gpt">
           This is where I would put the AI chat button<br />
           <span style="font-weight: bolder">IF I HAD ONE</span>
         </div>
