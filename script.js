@@ -69,6 +69,7 @@ function Attach(what, next) {
       btn.className = "option";
     }
   });
+  
 }
 Attach("main", "pref");
 Attach("pref", "stat");
