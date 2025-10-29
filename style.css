@@ -190,12 +190,13 @@ tr:nth-child(even) {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
 .loader {
   margin: 0px;
   margin-right: 6px;
   width: 1em;
   height: 1em;
-  border: 2.5px dotted var(--foreground-color);
+  border: 3px dotted var(--foreground-color);
   cursor: progress;
   /*border-left-color: transparent;
   border-right-color: transparent;*/
@@ -204,6 +205,7 @@ tr:nth-child(even) {
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
 }
+
 img {
   transform: scale(0.9);
 }
