@@ -340,9 +340,9 @@ body {
   scrollbar-color: var(--accent-color) var(--background-color);
 }*/
 :root {
-  --accent-color-hover: #006dc1;
+  --accent-color-hover: #88cbff;
   --accent-color: #0090ff;
-  --accent-color-button-pressed: #005499;
+  --accent-color-button-pressed: #006dc1;
   --background-color: white;
   --foreground-color: black;
   --box-border-color: white;
@@ -356,7 +356,7 @@ body {
 body.dark-mode {
   background-image: radial-gradient(
     circle at center,
-    var(--accent-color-button-pressed) 1px,
+    rgba(255, 255, 255, 0.4) 1px,
     transparent 1px
   );
   background-size: 20px 20px;
@@ -366,10 +366,10 @@ body.dark-mode {
   --accent-color-hover: #88cbff;
   --accent-color: #0090ff;
   --accent-color-button-pressed: #006dc1;
-  --background-color: #333;
+  --background-color: #242424;
   --foreground-color: white;
-  --box-border-color: #333;
-  --real-background-color: #000;
+  --box-border-color: var(--background-color);
+  --real-background-color: #121212;
   --color-interface-base: rgba(255, 255, 255, 0.2);
   scrollbar-color: var(--accent-color) var(--background-color);
 }
@@ -386,6 +386,10 @@ body.dark-mode {
 }
 .selected.option {
   background-color: var(--accent-color);
+  color: white;
+}
+.selected.option:hover {
+  background-color: var(--accent-color-button-pressed);
   color: white;
 }
 .user_interface {
@@ -489,7 +493,6 @@ input#toeic {
   bottom: 2px;
   background-color: white;
   transition: 200ms;
-  -webkit-transition: 200ms;
   border-radius: 50%;
 }
 
@@ -502,8 +505,6 @@ input#toeic {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(18px);
-  -ms-transform: translateX(18px);
   transform: translateX(18px);
 }
 .slider_range {
