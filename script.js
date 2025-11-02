@@ -131,6 +131,15 @@ SetTargets.addEventListener("change", () => {
       "You must enable Set Targets for these sliders to apply.";
   }
 });
+let DarkModeSelector = document.getElementById("darkmode");
+let Body = document.body;
+DarkModeSelector.addEventListener("change", () => {
+  if (DarkModeSelector.checked) {
+    Body.className = "dark-mode";
+  } else {
+    Body.className = "";
+  }
+});
 /*UI.addEventListener('scroll', () => {
   const containerRect = container.getBoundingClientRect();
   [main,pref,stat].forEach(

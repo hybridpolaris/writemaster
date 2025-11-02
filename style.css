@@ -6,7 +6,7 @@
   font-variant-numeric: tabular-nums;
   /**/
 
-  transition: 100ms ease-in-out;
+  transition: 200ms ease-in-out;
   /*animation: rotation 50000s linear infinite;*/
 }
 .serif {
@@ -51,7 +51,7 @@ body {
       rgba(153, 228, 255, 0.4),
       transparent 50%
     );
-  background-color: var(--background-color); /* Light base color */
+  background-color: var(--real-background-color); /* Light base color */
   min-height: 100vh;
   background-attachment: fixed;
   overflow: hidden;
@@ -88,7 +88,7 @@ code {
   border-radius: 13px;
   padding: 10px;
   background-color: var(--background-color) !important;
-  border: 1px solid var(--foreground-color) !important;
+  border: 1px solid var(--box-border-color) !important;
   color: var(--foreground-color);
 }
 * {
@@ -103,7 +103,7 @@ code {
   border-radius: 10px;
   padding: 10px;
   background-color: var(--background-color) !important;
-  border: 1px solid var(--foreground-color) !important;
+  border: 1px solid var(--box-border-color) !important;
   color: var(--foreground-color);
   margin: 0px;
 }
@@ -306,16 +306,73 @@ header {
   }
 }
 
+/*dark mode styles*/
+/*
+* {
+  --accent-color-hover: #88cbff;
+  --accent-color: #0090ff;
+  --accent-color-button-pressed: #006dc1;
+  --background-color: #333;
+  --foreground-color: white;
+  --box-border-color: #333;
+  --real-background-color: #000;
+  --color-interface-base: rgba(255, 255, 255, 0.2);
+  --dm-bg-spacing: 2%;
+  scrollbar-color: var(--accent-color) var(--background-color);
+}
+body {
+  background-image: radial-gradient(circle at center, var(--accent-color-button-pressed) 1px, transparent 1px);
+  background-size: 20px 20px; /* Controls the spacing between dots 
+  background-repeat: repeat;
+
+  background-color: var(--real-background-color);
+}*/
+/*
 * {
   --accent-color-hover: #88cbff;
   --accent-color: #0090ff;
   --accent-color-button-pressed: #006dc1;
   --background-color: white;
   --foreground-color: black;
+  --box-border-color: white;
+  --real-background-color: white;
   --color-interface-base: rgba(0, 0, 0, 0.2);
+  scrollbar-color: var(--accent-color) var(--background-color);
+}*/
+:root {
+  --accent-color-hover: #006dc1;
+  --accent-color: #0090ff;
+  --accent-color-button-pressed: #005499;
+  --background-color: white;
+  --foreground-color: black;
+  --box-border-color: white;
+  --real-background-color: white;
+  --color-interface-base: rgba(0, 0, 0, 0.2);
+  --dm-bg-spacing: 2%;
   scrollbar-color: var(--accent-color) var(--background-color);
 }
 
+/* === Dark Mode (activated when body has class .dark-mode) === */
+body.dark-mode {
+  background-image: radial-gradient(
+    circle at center,
+    var(--accent-color-button-pressed) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+  background-repeat: repeat;
+  background-color: var(--real-background-color);
+  color: var(--foreground-color);
+  --accent-color-hover: #88cbff;
+  --accent-color: #0090ff;
+  --accent-color-button-pressed: #006dc1;
+  --background-color: #333;
+  --foreground-color: white;
+  --box-border-color: #333;
+  --real-background-color: #000;
+  --color-interface-base: rgba(255, 255, 255, 0.2);
+  scrollbar-color: var(--accent-color) var(--background-color);
+}
 .option {
   border-radius: 5px;
   display: flex;
@@ -431,8 +488,8 @@ input#toeic {
   left: 2px;
   bottom: 2px;
   background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  transition: 200ms;
+  -webkit-transition: 200ms;
   border-radius: 50%;
 }
 
