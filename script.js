@@ -71,20 +71,24 @@ let IELTS_Score = document.getElementById("ielts_score");
 let IELTS_Slider = document.getElementById("band_ielts");
 let TOEIC_Score = document.getElementById("toeic_score");
 let TOEIC_Slider = document.getElementById("band_toeic");
-TOEIC_Score.innerHTML = `${TOEIC_Slider.value} points`;
-IELTS_Score.innerHTML = `Band ${IELTS_Slider.value}`;
-TOEIC_Slider.addEventListener("input", () => {
+let WhetherTargetsMatter = true;
+function UpdateSliders() {
   TOEIC_Score.innerHTML = `${TOEIC_Slider.value} points`;
-});
-IELTS_Slider.addEventListener("input", () => {
   IELTS_Score.innerHTML = `Band ${IELTS_Slider.value}`;
-});
+  localStorage.setItem("ielts_target", IELTS_Slider.value);
+  localStorage.setItem("toeic_target", TOEIC_Slider.value);
+}
+IELTS_Slider.value = localStorage.getItem("ielts_target") ?? 5.5;
+TOEIC_Slider.value = localStorage.getItem("toeic_target") ?? 700;
+UpdateSliders();
+TOEIC_Slider.addEventListener("input", UpdateSliders);
+IELTS_Slider.addEventListener("input", UpdateSliders);
 let GenerateTest = document.getElementById("generate_test");
 let Errors = document.getElementById("errors");
 let IncludeListening = document.getElementById("include_listening");
 let IncludeWriting = document.getElementById("include_writing");
 let IncludeReading = document.getElementById("include_reading");
-let WhetherTargetsMatter = true;
+
 GenerateTest.addEventListener("click", () => {
   var selected = document.querySelector('input[name="test_format"]:checked');
 
@@ -120,26 +124,37 @@ GenerateTest.addEventListener("click", () => {
 });
 let SetTargets = document.getElementById("set_targets");
 let SliderMessage = document.getElementById("whether_targets_matter");
-SetTargets.addEventListener("change", () => {
+SetTargets.checked = localStorage.getItem("targets") == "yes";
+function UpdateWTM() {
   WhetherTargetsMatter = SetTargets.checked;
   IELTS_Slider.disabled = !WhetherTargetsMatter;
   TOEIC_Slider.disabled = !WhetherTargetsMatter;
   if (WhetherTargetsMatter) {
     SliderMessage.innerHTML = "";
+    localStorage.setItem("targets", "yes");
   } else {
     SliderMessage.innerHTML =
       "You must enable Set Targets for these sliders to apply.";
+    localStorage.setItem("targets", "no");
   }
-});
+}
+UpdateWTM();
+SetTargets.addEventListener("change", UpdateWTM);
 let DarkModeSelector = document.getElementById("darkmode");
 let Body = document.body;
-DarkModeSelector.addEventListener("change", () => {
+DarkModeSelector.checked = localStorage.getItem("darkmode") == "yes";
+function UpdateDarkMode() {
   if (DarkModeSelector.checked) {
     Body.className = "dark-mode";
+    localStorage.setItem("darkmode", "yes");
   } else {
     Body.className = "";
+    localStorage.setItem("darkmode", "no");
   }
-});
+}
+
+UpdateDarkMode();
+DarkModeSelector.addEventListener("change", UpdateDarkMode);
 /*UI.addEventListener('scroll', () => {
   const containerRect = container.getBoundingClientRect();
   [main,pref,stat].forEach(
