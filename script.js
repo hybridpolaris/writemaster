@@ -64,6 +64,7 @@ function Attach(what, next) {
     }
   });
 }
+
 Attach("main", "pref");
 Attach("pref", "stat");
 Attach("stat", "end");
@@ -112,6 +113,10 @@ GenerateTest.addEventListener("click", () => {
   console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
   console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
+  sessionStorage.setItem("type", TypeOfTest.toUpperCase());
+  sessionStorage.setItem("listening", HasListening);
+  sessionStorage.setItem("reading", HasReading);
+  sessionStorage.setItem("writing", HasWriting);
   if (WhetherTargetsMatter) {
     console.log(
       `Current performance: ${
@@ -120,7 +125,13 @@ GenerateTest.addEventListener("click", () => {
           : `${TOEIC_Slider.value} points`
       }`
     );
+    if (TypeOfTest == "ielts") {
+      sessionStorage.setItem("target", IELTS_Slider.value);
+    } else {
+      sessionStorage.setItem("target", TOEIC_Slider.value);
+    }
   }
+  window.location.href = "/Test_Page";
 });
 let SetTargets = document.getElementById("set_targets");
 let SliderMessage = document.getElementById("whether_targets_matter");
@@ -141,11 +152,11 @@ function UpdateWTM() {
 UpdateWTM();
 SetTargets.addEventListener("change", UpdateWTM);
 //let DarkModeSelector = document.getElementById("darkmode");
-let Body = document.body;
+
 //DarkModeSelector.checked = localStorage.getItem("darkmode") == "yes";
 
 document.getElementById("default").checked =
-  localStorage.getItem("theme") ?? "default" == "default";
+  localStorage.getItem("theme") == "default";
 document.getElementById("light").checked =
   localStorage.getItem("theme") == "light";
 document.getElementById("dark").checked =
@@ -153,26 +164,19 @@ document.getElementById("dark").checked =
 
 function UpdateDarkMode() {
   var selected = document.querySelector('input[name="theme"]:checked').id;
-  selected = selected ?? "default";
+  selected = selected ?? "light";
   if (selected == "dark") {
-    Body.className = "dark-mode";
+    document.body.className = "dark-mode";
   } else if (selected == "light") {
-    Body.className = "";
+    document.body.className = "";
   } else {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      Body.className = "dark-mode";
+      document.body.className = "dark-mode";
     } else {
-      Body.className = "";
+      document.body.className = "";
     }
   }
   localStorage.setItem("theme", selected);
-  /*if (DarkModeSelector.checked) {
-    Body.className = "dark-mode";
-    localStorage.setItem("darkmode", "yes");
-  } else {
-    Body.className = "";
-    localStorage.setItem("darkmode", "no");
-  }*/
 }
 document.querySelectorAll('input[name="theme"]').forEach((e) => {
   e.addEventListener("change", UpdateDarkMode);
@@ -183,6 +187,26 @@ const c = "01234567890123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 const randc = () => {
   return c[Math.floor(Math.random() * c.length)] ?? c[0];
 };
+function ResetEverything() {
+  localStorage.clear();
+  //DarkModeSelector.checked = false;
+  SetTargets.checked = false;
+  IELTS_Slider.value = 5.5;
+  TOEIC_Slider.value = 700;
+
+  UpdateWTM();
+  UpdateSliders();
+  document.getElementById("default").checked = false;
+  document.getElementById("light").checked = true;
+  document.getElementById("dark").checked = false;
+  UpdateDarkMode();
+}
+if (localStorage.getItem("used_before")) {
+  //do nothing!
+} else {
+  ResetEverything();
+  localStorage.setItem("used_before", "yes");
+}
 document.getElementById("deleteall").addEventListener("click", () => {
   if (confirm("Are you sure? This cannot be undone")) {
     let code = "";
@@ -196,18 +220,7 @@ document.getElementById("deleteall").addEventListener("click", () => {
       code += "-";
     }
     if (prompt(`Please type the following code to confirm: ${code}`) == code) {
-      localStorage.clear();
-      //DarkModeSelector.checked = false;
-      SetTargets.checked = false;
-      IELTS_Slider.value = 5.5;
-      TOEIC_Slider.value = 700;
-
-      UpdateWTM();
-      UpdateSliders();
-      document.getElementById("default").checked = true;
-      document.getElementById("light").checked = false;
-      document.getElementById("dark").checked = false;
-      UpdateDarkMode();
+      ResetEverything();
     }
   }
 });

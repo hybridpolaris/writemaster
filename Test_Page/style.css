@@ -1,52 +1,33 @@
-.main {
-  height: 100vh;
-  width: 100vw;
-  padding: 20px;
+.timer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.8fr 0.2fr;
+  gap: 20px 20px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "test test"
+    "timer submit";
 }
-.userface {
-  display: flex;
 
-  align-items: center;
+.test {
+  grid-area: test;
+}
+
+.timer {
+  grid-area: timer;
+  flex-direction: column;
+}
+.timer p,
+.timer h3 {
+  margin: 0px;
+}
+.submit {
+  grid-area: submit;
+}
+
+.timer,
+.submit {
+  display: flex;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-.userface {
-  flex-grow: 1;
-}
-.box,
-.big.box {
-  -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-}
-.box {
-  width: fit-content;
-  height: fit-content;
-  border: none;
-  border-radius: 13px;
-  padding: 10px;
-  background-color: var(--background-color) !important;
-  border: 1px solid var(--box-border-color) !important;
-  color: var(--foreground-color);
-}
-* {
-  max-width: 100vw;
-  box-sizing: border-box; /* Ensures padding doesn't break the width */
-  overflow-wrap: break-word; /* Wraps long content */
-}
-.big.box {
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  background-color: var(--background-color) !important;
-  border: 1px solid var(--box-border-color) !important;
-  color: var(--foreground-color);
-  margin: 0px;
-}
-body {
-  min-height: 100vh;
-  margin: 0px;
+  align-items: center;
 }
