@@ -11,6 +11,8 @@ if (selected == "dark") {
     document.body.className = "";
   }
 }
+
+document.title = `${sessionStorage.getItem('type')} practice - Writemaster`
 document.getElementById("data").innerHTML = /*html*/ `
 Type of test: ${sessionStorage.getItem("type")}<br>
 Include listening: ${sessionStorage.getItem("listening")}<br>
@@ -18,30 +20,61 @@ Include writing: ${sessionStorage.getItem("writing")}<br>
 Include reading: ${sessionStorage.getItem("reading")}<br>
 Target: ${sessionStorage.getItem("target") ?? "none"}<br>
 `;
-let t = 0;
-let id = 0;
+
+let timeLeft = 0; // seconds
+let intervalId = 0; // what
 const TimerElement = document.getElementById("timer");
 function StartTimer(time) {
-  //time is in seconds
-  t = Date.now() + 1000 * time;
-  id = setInterval(UpdateTimer, 100);
+  timeLeft = Date.now() + 1000 * time;
+  intervalId = setInterval(UpdateTimer, 100);
 }
-function UpdateTimer() {
-  let et = Math.ceil((t - Date.now()) / 1000);
+
+function UpdateTimer() { // please make variable names more self explanatory :(
+  let et = Math.ceil((timeLeft - Date.now()) / 1000);
   if (et <= 0) {
-    clearInterval(id);
+    clearInterval(intervalId);
     TimerElement.innerHTML = "0:00";
-    TimerElement.style = /*css*/ "color:var(--accent-color)";
+    TimerElement.style = /*css*/ "color:var(--foreground-color)";
     return;
   } else {
     TimerElement.style = "";
   }
-  let s = (et % 60).toString();
-  let m = (Math.floor(et / 60) % 60).toString();
-  let h = Math.floor(et / 3600).toString();
-  if (h == 0) {
-    TimerElement.innerHTML = `${m}:${s.padStart(2, "0")}`;
+
+  let seconds = (et % 60).toString();
+  let minutes = (Math.floor(et / 60) % 60).toString();
+  let hours = Math.floor(et / 3600).toString();
+  if (hours == 0) {
+    TimerElement.innerHTML = `${minutes}:${seconds.padStart(2, "0")}`;
   } else {
-    TimerElement.innerHTML = `${h}:${m.padStart(2, "0")}:${s.padStart(2, "0")}`;
+    TimerElement.innerHTML = `${hours}:${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
   }
 }
+
+async function getAIResponse(prompt = "") {
+	const apiKey = "AIzaSyACUiew2xvOhoLEQXiUtcqld7xl0BG4YwY";
+	const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  
+	const requestBody = {
+	  contents: [
+		{
+		  role: "user",
+		  parts: [{ text: prompt }],
+		},
+	  ],
+	};
+  
+	const response = await fetch(url, {
+	  method: "POST",
+	  headers: {
+		"Content-Type": "application/json",
+	  },
+	  body: JSON.stringify(requestBody),
+	});
+  
+	const data = await response.json();
+	return data.candidates[0].content.parts[0].text;
+  }
+
+  getAIResponse(`I'm practicing for ${sessionStorage.getItem('type')}, can you generate a writing question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you don't need to provide pictures or anything. Thanks.`).then(response => {
+	console.log(response);
+  })
