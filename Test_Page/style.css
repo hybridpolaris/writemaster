@@ -7,10 +7,12 @@
   grid-template-areas:
     "test test"
     "timer submit";
+  height: 100%;
 }
 
 .test {
   grid-area: test;
+  overflow-y: scroll;
 }
 
 .timer {
