@@ -80,13 +80,13 @@
             <div class="label">Enable personalization</div>
             <div class="switch_container">
               <div class="switch">
-                <input type="checkbox" id="set_targets" checked />
+                <input type="checkbox" id="set_sliders" checked />
                 <span class="slider"></span>
               </div>
             </div>
           </div>
           <span
-            id="whether_targets_matter"
+            id="whether_sliders_matter"
             style="font-weight: bolder; color: red"
           ></span
           ><br />
@@ -155,7 +155,7 @@
             </div>
           </div>
 
-          <div class="option2" style="width: fit-content">
+          <!--<div class="option2" style="width: fit-content">
             <div class="test_format" id="ielts_tf_sel_outer">
               <input type="radio" name="test_format" id="ielts" />
               <div class="tf_inner" id="ielts_tf_sel_inner">IELTS</div>
@@ -164,9 +164,20 @@
               <input type="radio" name="test_format" id="toeic" />
               <div class="tf_inner" id="toeic_tf_sel_inner">TOEIC</div>
             </div>
+          </div>-->
+          <div class="option2v">
+            <div class="label"><span>Selected Test:</span></div>
+            <div>
+              <select name="test_format" id="test_format">
+                <option value="ielts_gen" selected>IELTS General</option>
+                <option value="ielts_acad">IELTS Academic</option>
+                <option value="toeic">TOEIC</option>
+              </select>
+            </div>
           </div>
+
           <div class="option2 vertical_when_narrow">
-            <div class="label">Include Reading</div>
+            <div class="label"><span>Include Reading</span></div>
             <div class="switch_container">
               <div class="switch">
                 <input type="checkbox" id="include_reading" />
@@ -175,7 +186,7 @@
             </div>
           </div>
           <div class="option2 vertical_when_narrow">
-            <div class="label">Include Listening</div>
+            <div class="label"><span>Include Listening</span></div>
             <div class="switch_container">
               <div class="switch">
                 <input type="checkbox" id="include_listening" />
@@ -184,7 +195,7 @@
             </div>
           </div>
           <div class="option2 vertical_when_narrow">
-            <div class="label">Include Writing</div>
+            <div class="label"><span>Include Writing</span></div>
             <div class="switch_container">
               <div class="switch">
                 <input type="checkbox" id="include_writing" />

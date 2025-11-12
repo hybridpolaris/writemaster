@@ -72,7 +72,7 @@ let IELTS_Score = document.getElementById("ielts_score");
 let IELTS_Slider = document.getElementById("band_ielts");
 let TOEIC_Score = document.getElementById("toeic_score");
 let TOEIC_Slider = document.getElementById("band_toeic");
-let WhetherTargetsMatter = true;
+let WhetherSlidersMatter = true;
 function UpdateSliders() {
   TOEIC_Score.innerHTML = `${TOEIC_Slider.value} points`;
   IELTS_Score.innerHTML = `Band ${IELTS_Slider.value}`;
@@ -91,14 +91,15 @@ let IncludeWriting = document.getElementById("include_writing");
 let IncludeReading = document.getElementById("include_reading");
 
 GenerateTest.addEventListener("click", () => {
-  var selected = document.querySelector('input[name="test_format"]:checked');
+  /*var selected = document.querySelector('input[name="test_format"]:checked');
 
   if (selected) {
     var TypeOfTest = selected.id;
   } else {
     Errors.innerHTML = "You must select one type of test!";
     return;
-  }
+  }*/
+  var TypeOfTest = document.getElementById("test_format").value;
   var HasListening = IncludeListening.checked;
   var HasReading = IncludeReading.checked;
   var HasWriting = IncludeWriting.checked;
@@ -113,7 +114,7 @@ GenerateTest.addEventListener("click", () => {
   console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
   console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
-  if (WhetherTargetsMatter) {
+  if (WhetherSlidersMatter) {
     console.log(
       `Current performance: ${
         TypeOfTest == "ielts"
@@ -121,39 +122,43 @@ GenerateTest.addEventListener("click", () => {
           : `${TOEIC_Slider.value} points`
       }`
     );
-    
-    sessionStorage.setItem("target", (TypeOfTest == 'ielts') ? IELTS_Slider.value : TOEIC_Slider.value);
+
+    sessionStorage.setItem(
+      "target",
+      TypeOfTest == "ielts" ? IELTS_Slider.value : TOEIC_Slider.value
+    );
   }
 
   const params = new URLSearchParams();
-  params.set('type', TypeOfTest);
+  params.set("type", TypeOfTest);
   // right side of && evaluates (run) if left is true, otherwise it stops immediately
   // basically a 'shorthand if' if you will
-  HasListening && params.append('include', 'listening');
-  HasReading && params.append('include', 'reading');
-  HasWriting && params.append('include', 'writing');
-
+  HasListening && params.append("include", "listening");
+  HasReading && params.append("include", "reading");
+  HasWriting && params.append("include", "writing");
+  // Who in their right mind thinks of short-circuit evaluation?
+  // oh stack overflow users do
   window.location.href = "/test/index.html?" + params.toString();
 });
 
-let SetTargets = document.getElementById("set_targets");
-let SliderMessage = document.getElementById("whether_targets_matter");
-SetTargets.checked = localStorage.getItem("targets") == "yes";
+let SetSliders = document.getElementById("set_sliders");
+let SliderMessage = document.getElementById("whether_sliders_matter");
+SetSliders.checked = localStorage.getItem("sliders") == "yes";
 function UpdateWTM() {
-  WhetherTargetsMatter = SetTargets.checked;
-  IELTS_Slider.disabled = !WhetherTargetsMatter;
-  TOEIC_Slider.disabled = !WhetherTargetsMatter;
-  if (WhetherTargetsMatter) {
+  WhetherSlidersMatter = SetSliders.checked;
+  IELTS_Slider.disabled = !WhetherSlidersMatter;
+  TOEIC_Slider.disabled = !WhetherSlidersMatter;
+  if (WhetherSlidersMatter) {
     SliderMessage.innerHTML = "";
-    localStorage.setItem("targets", "yes");
+    localStorage.setItem("sliders", "yes");
   } else {
     SliderMessage.innerHTML =
       "You must enable personalization for these sliders to apply.";
-    localStorage.setItem("targets", "no");
+    localStorage.setItem("sliders", "no");
   }
 }
 UpdateWTM();
-SetTargets.addEventListener("change", UpdateWTM);
+SetSliders.addEventListener("change", UpdateWTM);
 //let DarkModeSelector = document.getElementById("darkmode");
 
 //DarkModeSelector.checked = localStorage.getItem("darkmode") == "yes";
@@ -193,7 +198,7 @@ const randc = () => {
 function ResetEverything() {
   localStorage.clear();
   //DarkModeSelector.checked = false;
-  SetTargets.checked = false;
+  SetSliders.checked = false;
   IELTS_Slider.value = 5.5;
   TOEIC_Slider.value = 700;
 

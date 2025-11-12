@@ -1,15 +1,13 @@
 .timer-grid {
   display: grid;
-  grid-template-columns: 0.8fr 0.2fr;
-  grid-template-rows: 1.9fr 0.1fr;
+  grid-template-columns: auto minmax(80px, 0.2fr);
+  grid-template-rows: 0.85fr 0.15fr;
   gap: 20px 20px;
   grid-auto-flow: row;
   grid-template-areas:
     "test test"
     "timer submit";
-  height: 100%;
 }
-
 .test {
   grid-area: test;
   overflow-y: scroll;

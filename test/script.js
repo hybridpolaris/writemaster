@@ -11,11 +11,15 @@ if (selected == "dark") {
     document.body.className = "";
   }
 }
-
+const translationKeys = {
+  ielts_gen: "IELTS",
+  ielts_acad: "IELTS Academic",
+  toeic: "TOEIC",
+};
 const params = new URLSearchParams(window.location.search);
 const testType = params.get("type");
 const testIncludes = params.getAll("include");
-document.title = `${testType.toUpperCase()} practice - Writemaster`;
+document.title = `${translationKeys[testType]} practice - Writemaster`;
 
 let timeLeft = 0; // seconds
 let intervalId = 0; // what
@@ -62,7 +66,12 @@ function Submit() {
   alert("uiia");
 }
 async function getAIResponse(prompt = "") {
-  const response = await fetch(`https://writemaster-api.vercel.app/api/ai?prompt=${encodeURIComponent(prompt)}`)
+  return `This is a response to the question "${prompt}"`;
+  const response = await fetch(
+    `https://writemaster-api.vercel.app/api/ai?prompt=${encodeURIComponent(
+      prompt
+    )}`
+  );
 
   if (response.status == 429) {
     window.alert(
@@ -80,6 +89,9 @@ async function getAIResponse(prompt = "") {
   return data.candidates[0].content.parts[0].text;
 }
 
-getAIResponse(`I'm practicing for ${testType}, can you generate a writing question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you don't need to provide pictures or anything. Thanks.`).then(response => {
+/*getAIResponse(
+  `I'm practicing for ${testType}, can you generate a writing question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you don't need to provide pictures or anything. Thanks.`
+).then((response) => {
   console.log(response);
-})
+});
+*/
