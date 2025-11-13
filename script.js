@@ -99,7 +99,11 @@ GenerateTest.addEventListener("click", () => {
     Errors.innerHTML = "You must select one type of test!";
     return;
   }*/
-  var TypeOfTest = document.getElementById("test_format").value;
+  var TypeOfTest = document.querySelector('input[name="type"]:checked').id;
+  if (!TypeOfTest) {
+    Errors.innerHTML = "You must select one type of test!";
+    return;
+  }
   var HasListening = IncludeListening.checked;
   var HasReading = IncludeReading.checked;
   var HasWriting = IncludeWriting.checked;

@@ -118,17 +118,17 @@
           </div>
           <h3>Theme</h3>
           <div class="option3" style="width: fit-content">
-            <div class="theme" id="dm_default_outer">
+            <div class="sb">
               <input type="radio" name="theme" id="default" checked />
-              <div class="dm_inner" id="dm_default_inner">Default</div>
+              <div class="sb_inner">Default</div>
             </div>
-            <div class="theme" id="dm_light_outer">
+            <div class="sb">
               <input type="radio" name="theme" id="dark" />
-              <div class="dm_inner" id="dm_dark_inner">Dark</div>
+              <div class="sb_inner">Dark</div>
             </div>
-            <div class="theme" id="dm_dark_outer">
+            <div class="sb">
               <input type="radio" name="theme" id="light" />
-              <div class="dm_inner" id="dm_light_inner">Light</div>
+              <div class="sb_inner">Light</div>
             </div>
           </div>
           <br />
@@ -165,14 +165,18 @@
               <div class="tf_inner" id="toeic_tf_sel_inner">TOEIC</div>
             </div>
           </div>-->
-          <div class="option2v">
-            <div class="label"><span>Selected Test:</span></div>
-            <div>
-              <select name="test_format" id="test_format">
-                <option value="ielts_gen" selected>IELTS General</option>
-                <option value="ielts_acad">IELTS Academic</option>
-                <option value="toeic">TOEIC</option>
-              </select>
+          <div id="test_format">
+            <div class="sb">
+              <input type="radio" name="type" id="ielts_gen" checked />
+              <div class="sb_inner">IELTS General</div>
+            </div>
+            <div class="sb">
+              <input type="radio" name="type" id="ielts_acad" />
+              <div class="sb_inner">IELTS Academic</div>
+            </div>
+            <div class="sb">
+              <input type="radio" name="type" id="toeic" />
+              <div class="sb_inner">TOEIC</div>
             </div>
           </div>
 

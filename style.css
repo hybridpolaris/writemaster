@@ -287,6 +287,23 @@ header {
     gap: 10px;
   }
 }
+#test_format {
+  padding: 10px;
+  display: grid;
+  grid-auto-flow: row;
+}
+#test_format .sb {
+  width: 100%;
+}
+#test_format .sb_inner {
+  width: 100%;
+}
+.try_our_gpt {
+  grid-area: try_our_gpt;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 @media screen and (max-aspect-ratio: 1) {
   .wide_only {
     display: none !important;
@@ -304,6 +321,9 @@ header {
 
     padding: 10px;
     border-radius: 10px;
+  }
+  .try_our_gpt button {
+    flex-direction: column;
   }
   .option2.vertical_when_narrow {
     grid-template-columns: 1fr;
@@ -443,17 +463,11 @@ select {
   border: none;
 }
 
-.try_our_gpt {
-  grid-area: try_our_gpt;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.test_format {
+.sb {
   position: relative;
   cursor: pointer;
 }
-.test_format input {
+.sb input {
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -477,71 +491,21 @@ option:hover {
   background-color: var(--accent-color);
   color: white;
 }
-/*this segment may torture readers*/
-/*.test_format input#ielts:checked + .tf_inner#ielts_tf_sel_inner {
-  background-color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  color: white;
-}
-.test_format input#toeic:checked + .tf_inner#toeic_tf_sel_inner {
-  background-color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  color: white;
-}
-I don't understand why, but using :hover directly doesn't work.
-*/
-/*
-.test_format#ielts_tf_sel_outer:hover > .tf_inner#ielts_tf_sel_inner {
-  background-color: var(--accent-color-hover);
-  border: 1px solid var(--accent-color-hover);
-}
-.test_format#toeic_tf_sel_outer:hover > .tf_inner#toeic_tf_sel_inner {
-  background-color: var(--accent-color-hover);
-  border: 1px solid var(--accent-color-hover);
-}*/
-.tf_inner {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--foreground-color);
-  width: fit-content;
-}
-.dm_inner {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--foreground-color);
-  width: fit-content;
-}
-.theme {
-  position: relative;
-  cursor: pointer;
-}
-.theme input {
-  opacity: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-input#default,
-input#dark,
-input#light {
-  cursor: pointer;
-}
-.theme input#default:checked + .dm_inner#dm_default_inner {
-  background-color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  color: white;
-}
-.theme input#dark:checked + .dm_inner#dm_dark_inner {
-  background-color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  color: white;
-}
-.theme input#light:checked + .dm_inner#dm_light_inner {
-  background-color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  color: white;
-}
 
+.sb_inner {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--foreground-color);
+  width: fit-content;
+}
+.sb input {
+  cursor: pointer;
+}
+.sb input:checked + .sb_inner {
+  background-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: white;
+}
 .center {
   display: flex;
   justify-content: center;
