@@ -17,7 +17,9 @@
   grid-area: timer;
   flex-direction: row;
 }
-
+.blurry {
+  filter: blur(10px);
+}
 .timer p,
 .timer h3 {
   margin: 0px;
@@ -47,4 +49,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+input:disabled,
+textarea:disabled {
+  opacity: 80%;
+  cursor: not-allowed;
 }

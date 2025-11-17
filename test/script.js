@@ -28,7 +28,9 @@ function StartTimer(time) {
   timeLeft = Date.now() + 1000 * time;
   intervalId = setInterval(UpdateTimer, 100);
 }
-
+const ActionButton = document.getElementById("submit_btn");
+const TestBox = document.getElementById("test");
+let stage = 0; //0: before 1: during 2: after
 function UpdateTimer() {
   // please make variable names more self explanatory :(
   let et = Math.ceil((timeLeft - Date.now()) / 1000);
@@ -54,16 +56,42 @@ function UpdateTimer() {
     )}:${seconds.padStart(2, "0")}`;
   }
 }
-document.getElementById("submit_btn").addEventListener("click", () => {
-  clearInterval(intervalId);
-  TimerElement.style = /*css*/ "color:var(--accent-color)";
-  Submit();
+ActionButton.addEventListener("click", () => {
+  if (stage == 0) {
+    stage = 1;
+    ActionButton.innerHTML = "Submit";
+    TestBox.className = "";
+    StartTimer(5 * 60);//can and will be changed later
+    enableTest(); 
+  } else {
+    clearInterval(intervalId);
+    TimerElement.style = /*css*/ "color:var(--accent-color)";
+    Submit();
+  }
 });
+function ReadyTest() {
+  document.getElementById("testrdy").innerHTML = "";
+  ActionButton.disabled = false;
+}
+function disableTest() {
+  TestBox.querySelectorAll("input, textarea").forEach((e) => {
+    e.disabled = true;
+  });
+}
+disableTest();
+function enableTest() {
+  TestBox.querySelectorAll("input, textarea").forEach((e) => {
+    e.disabled = false;
+  });
+}
 function Submit() {
+  stage = 2;
   //tbh idk what should be done here
   //leave that for qh
   console.log("Test is done!");
   alert("uiia");
+  disableTest();
+  ActionButton.disabled = true;
 }
 async function getAIResponse(prompt = "") {
   return `This is a response to the question "${prompt}"`;

@@ -26,18 +26,28 @@
           <code><h3 id="timer">--:--</h3></code>
         </div>
         <div>
-          <button class="selector submit" id="submit_btn">Submit</button>
+          <button class="selector submit" id="submit_btn" disabled>
+            Start Test
+          </button>
         </div>
         <div class="big test box">
-          <h1>
-            <span style="color: #0090ff">@Trịnh Quang Huy</span>
-            please do something
-          </h1>
-          <h3>
-            I've even done the hard part of passing arguments between pages!
-            Your only job is to add AI!
-          </h3>
-          <p id="data"></p>
+          <div id="testrdy">
+            <span class="loader"></span><span>Generating test...</span>
+          </div>
+          <button onclick="ReadyTest()">
+            Click here (for now) to mark the test as completely generated
+          </button>
+          <div class="blurry" id="test">
+            <h1>
+              <span style="color: #0090ff">@Trịnh Quang Huy</span>
+              remember that the AI's broken
+            </h1>
+            <h3>It's okay for now, I can keep making sequencers</h3>
+            <textarea name="idk" id="idk" cols="30" rows="10" disabled>
+this will one day work</textarea
+            >
+            <p id="data"></p>
+          </div>
         </div>
       </div>
     </div>

@@ -130,8 +130,13 @@ textarea.big {
   font-weight: bolder;
   cursor: pointer;
 }
+
 .selector:hover {
   background-color: var(--accent-color-button-pressed) !important;
+}
+.selector:disabled {
+  background-color: gray !important;
+  cursor: not-allowed;
 }
 table {
   width: 100%;
