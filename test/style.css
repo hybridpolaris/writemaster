@@ -44,6 +44,8 @@
 }
 .blurry {
   filter: blur(10px);
+  pointer-events: none;
+  cursor:not-allowed;
 }
 .timer p,
 .timer h3 {
