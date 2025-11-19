@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test Page</title>
+    <title>Practice test - Writemaster</title>
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="/normalize.css" />
@@ -21,6 +21,15 @@
   <body>
     <div class="main">
       <div class="userface timer-grid">
+        <div class="big test box">
+          <h1 id="title">
+            LOADING PRACTICE TEST
+          </h1>
+          <div id="testrdy">
+            <span class="loader"></span><span>Generating test...</span>
+          </div>
+          <div id="test" class="blurry"></div>
+        </div>
         <div class="big timer box">
           <p>Time Remaining:</p>
           <code><h3 id="timer">--:--</h3></code>
@@ -29,25 +38,6 @@
           <button class="selector submit" id="submit_btn" disabled>
             Start Test
           </button>
-        </div>
-        <div class="big test box">
-          <div id="testrdy">
-            <span class="loader"></span><span>Generating test...</span>
-          </div>
-          <button onclick="ReadyTest()">
-            Click here (for now) to mark the test as completely generated
-          </button>
-          <div class="blurry" id="test">
-            <h1>
-              <span style="color: #0090ff">@Trịnh Quang Huy</span>
-              remember that the AI's broken
-            </h1>
-            <h3>It's okay for now, I can keep making sequencers</h3>
-            <textarea name="idk" id="idk" cols="30" rows="10" disabled>
-this will one day work</textarea
-            >
-            <p id="data"></p>
-          </div>
         </div>
       </div>
     </div>
