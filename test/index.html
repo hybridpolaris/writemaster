@@ -25,14 +25,19 @@
           <h1 id="title">
             LOADING PRACTICE TEST
           </h1>
-          <div id="test"></div>
+          <div id="testrdy">
+            <span class="loader"></span><span>Generating test...</span>
+          </div>
+          <div id="test" class="blurry"></div>
         </div>
         <div class="big timer box">
           <p>Time Remaining:</p>
           <code><h3 id="timer">--:--</h3></code>
         </div>
         <div>
-          <button class="selector submit" id="submit_btn">Submit</button>
+          <button class="selector submit" id="submit_btn" disabled>
+            Start Test
+          </button>
         </div>
       </div>
     </div>

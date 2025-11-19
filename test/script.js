@@ -25,14 +25,18 @@ const testType = params.get("type");
 const testIncludes = params.getAll("include");
 document.title = `${translationKeys[testType]} practice - Writemaster`;
 
+let stage = 0;
 let timeLeft = 0; // seconds
 let intervalId = 0; // what
 const TimerElement = document.getElementById("timer");
+
 function startTimer(time) {
   timeLeft = Date.now() + 1000 * time;
   intervalId = setInterval(updateTimer, 100);
 }
 
+const ActionButton = document.getElementById("submit_btn");
+const TestBox = document.getElementById("test");
 function updateTimer() {
   // please make variable names more self explanatory :(
   let et = Math.ceil((timeLeft - Date.now()) / 1000);
@@ -59,18 +63,49 @@ function updateTimer() {
   }
 }
 
-document.getElementById("submit_btn").addEventListener("click", () => {
-  // asking for confirmation
-  window.confirm('Are you sure you want to submit?') && submit();
+ActionButton.addEventListener("click", () => {
+  if (stage == 0) {
+    stage = 1;
+    ActionButton.innerHTML = "Submit";
+    TestBox.className = "";
+    startTimer(60 * 60);//can and will be changed later
+    enableTest(); 
+  } else {
+    clearInterval(intervalId);
+    TimerElement.style = /*css*/ "color:var(--accent-color)";
+    window.confirm('Are you sure you want to submit?') && submit();
+  }
 });
 
+function readyTest() {
+  document.getElementById("testrdy").innerHTML = "";
+  ActionButton.disabled = false;
+}
+
+function disableTest() {
+  TestBox.querySelectorAll("input, textarea").forEach((e) => {
+    e.disabled = true;
+  });
+}
+disableTest();
+
+function enableTest() {
+  document.getElementById('test').className = '';
+  TestBox.querySelectorAll("input, textarea").forEach((e) => {
+    e.disabled = false;
+  });
+}
+
 function submit() {
+  stage = 2;
   //tbh idk what should be done here
   //leave that for qh
   TimerElement.style = /*css*/ "color:var(--accent-color)";
   clearInterval(intervalId);
   console.log("Test is done!");
-  alert("aqme");
+  alert("uiia");
+  disableTest();
+  ActionButton.disabled = true;
 }
 
 async function getAIResponse(prompt = "") {
@@ -102,9 +137,20 @@ async function getAIResponse(prompt = "") {
 // CODE STARTS HERE
 // is hpol or aqme a better username/displayname (pls answer i need to pick)
 
+let questionsLeftToGenerate = 0
+function setGenerationFinished(questions) {
+  questionsLeftToGenerate = questions;
+}
+
+function checkGenerationFinished() {
+  questionsLeftToGenerate -= 1;
+  (questionsLeftToGenerate <= 0) && readyTest();
+}
+
 document.getElementById('title').innerText = `${translationKeys[testType].toUpperCase()} PRACTICE TEST`;
 if (testType != 'toeic') {
   if (testIncludes.includes('writing')) {
+    setGenerationFinished(1);
     const section1 = document.createElement('div');
     const section1Title = document.createElement('h3');
     const section1Question = document.createElement('p');
@@ -112,16 +158,16 @@ if (testType != 'toeic') {
     
     section1.className = 'section';
     section1Title.innerText = 'Writing task 1';
-    getAIResponse(
-      `I'm practicing for ${translationKeys[testType]}, can you generate a writing part 1 question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you only need to provide charts in ONLY image form (not text form with markdown) if it is academic IELTS and otherwise, you should ONLY ANSWER WITH THE EXAM QUESTION and nothing else (except thE chart IMAGE), not even a title like 'IELTS Writing part 2'; and also not use any markdown, just plain text. Thanks.`
-    ).then((response) => {
+		getAIResponse(
+		  `I'm practicing for ${translationKeys[testType]}, can you generate a writing part 1 question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you should ONLY ANSWER WITH THE EXAM QUESTION and nothing else, not even a title like 'IELTS Writing part 2'; and also not use any markdown, just plain text. Thanks.`
+		).then(response => {
       section1Question.innerText = response;
-    });
+      checkGenerationFinished();
+    })
     
     section1.appendChild(section1Title);
     section1.appendChild(section1Question);
     section1.appendChild(section1Textbox);
     document.getElementById('test').appendChild(section1);
-    startTimer(3600);
   }
 }

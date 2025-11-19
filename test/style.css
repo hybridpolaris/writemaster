@@ -42,7 +42,9 @@
   grid-area: timer;
   flex-direction: row;
 }
-
+.blurry {
+  filter: blur(10px);
+}
 .timer p,
 .timer h3 {
   margin: 0px;
@@ -54,7 +56,9 @@
 .timer code {
   margin-left: 2.5%;
 }
-
+.submit {
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+}
 .submit {
   grid-area: submit;
   width: 100%;
@@ -70,4 +74,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+input:disabled,
+textarea:disabled {
+  opacity: 80%;
+  cursor: not-allowed;
 }
