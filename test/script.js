@@ -25,7 +25,7 @@ const testType = params.get("type");
 const testIncludes = params.getAll("include");
 document.title = `${translationKeys[testType]} practice - Writemaster`;
 if (!(testType in translationKeys) || testIncludes == []) {
-  window.location.href = '/';
+  window.location.href = "/";
 }
 
 let stage = 0;
@@ -96,15 +96,23 @@ function enableTest() {
     e.disabled = false;
   });
 }
-
+let Questions = [];
 function submit() {
   stage = 2;
   TimerElement.style = /*css*/ "color:var(--accent-color)";
   clearInterval(intervalId);
   console.log("Test is done!");
-  alert("uiia");
+  //alert("uiia");
   disableTest();
   ActionButton.disabled = true;
+  Questions.forEach((e) => {
+    getAIResponse(`Generate a helpful review for the following answer:\n
+${e.answer.value}\n
+The question is:\n
+${e.question}\n`).then((r) => {
+      e.response.innerHTML = marked.parse(r);
+    });
+  });
 }
 
 async function getAIResponse(prompt = "") {
@@ -135,6 +143,7 @@ async function getAIResponse(prompt = "") {
 
 // CODE STARTS HERE
 // is hpol or aqme a better username/displayname (pls answer i need to pick)
+//hpol
 
 let questionsLeftToGenerate = 0;
 function setGenerationFinished(questions) {
@@ -145,6 +154,7 @@ function checkGenerationFinished() {
   questionsLeftToGenerate -= 1;
   questionsLeftToGenerate <= 0 && readyTest();
 }
+/*on start */
 
 document.getElementById("title").innerText = `${translationKeys[
   testType
@@ -156,19 +166,33 @@ if (testType != "toeic") {
     const section1Title = document.createElement("h3");
     const section1Question = document.createElement("p");
     const section1Textbox = document.createElement("textarea");
-
+    const section1Response = document.createElement("p");
     section1.className = "section";
     section1Title.innerText = "Writing task 1";
+
     getAIResponse(
-      `I'm practicing for ${translationKeys[testType]}, can you generate a writing part 1 question for me? I don't want any tips/directions, as I'd like this to be a sort of mock test. \nNotes: you should ONLY ANSWER WITH THE EXAM QUESTION and nothing else, not even a title like 'IELTS Writing part 2'; Thanks.`
+      `Generate a ${translationKeys[testType]} Writing Task 1 question.
+
+Requirements:
+- Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
+- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
+- The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
+- Do not add anything before or after the question. Output the question alone.`
     ).then((response) => {
       section1Question.innerHTML = marked.parse(response);
+      Questions.push({
+        question: response,
+        answer: section1Textbox,
+        response: section1Response,
+      });
       checkGenerationFinished();
     });
 
     section1.appendChild(section1Title);
     section1.appendChild(section1Question);
     section1.appendChild(section1Textbox);
+    section1.appendChild(section1Response);
+
     document.getElementById("test").appendChild(section1);
   }
 }
