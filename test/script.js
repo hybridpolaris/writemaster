@@ -22,6 +22,9 @@ const translationKeys = {
 
 const params = new URLSearchParams(window.location.search);
 const testType = params.get("type");
+if (params.get("include") === null) {
+  window.location.href = "/";
+}
 const testIncludes = params.get("include").split(" ");
 document.title = `${translationKeys[testType]} practice - Writemaster`;
 if (!(testType in translationKeys) || testIncludes == []) {
@@ -65,13 +68,13 @@ function updateTimer() {
     )}:${seconds.padStart(2, "0")}`;
   }
 }
-
+let testTime = 0;
 ActionButton.addEventListener("click", () => {
   if (stage == 0) {
     stage = 1;
     ActionButton.innerHTML = "Submit";
     TestBox.className = "";
-    startTimer(60 * 60); //can and will be changed later
+    startTimer(testTime);
     enableTest();
   } else {
     window.confirm("Are you sure you want to submit?") && submit();
@@ -165,7 +168,8 @@ function checkGenerationFinished() {
   questionsLeftToGenerate <= 0 && readyTest();
 }
 /*on start */
-function Generate(name) {
+function Generate(name, time) {
+  testTime += time;
   questionsLeftToGenerate++;
   const section = document.createElement("div");
   const sectionTitle = document.createElement("h3");
@@ -205,9 +209,9 @@ document.getElementById("title").innerText = `${translationKeys[
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
   if (testIncludes.includes("writing1")) {
-    Generate("Writing Task 1");
+    Generate("Writing Task 1", 20 * 60);
   }
   if (testIncludes.includes("writing2")) {
-    Generate("Writing Task 2");
+    Generate("Writing Task 2", 40 * 60);
   }
 }
