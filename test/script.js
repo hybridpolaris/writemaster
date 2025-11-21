@@ -22,7 +22,7 @@ const translationKeys = {
 
 const params = new URLSearchParams(window.location.search);
 const testType = params.get("type");
-const testIncludes = params.getAll("include");
+const testIncludes = params.get("include").split(" ");
 document.title = `${translationKeys[testType]} practice - Writemaster`;
 if (!(testType in translationKeys) || testIncludes == []) {
   window.location.href = "/";
@@ -96,6 +96,7 @@ function enableTest() {
     e.disabled = false;
   });
 }
+
 let Questions = [];
 function submit() {
   stage = 2;
@@ -106,7 +107,7 @@ function submit() {
   disableTest();
   ActionButton.disabled = true;
   Questions.forEach((e) => {
-    getAIResponse(`Generate a helpful review for the following answer:\n
+    getAIResponse(`Generate a helpful review for the following ${translationKeys[testType]} practice test answer:\n
 ${e.answer.value}\n
 The question is:\n
 ${e.question}\n`).then((r) => {
@@ -144,6 +145,7 @@ async function getAIResponse(prompt = "") {
 // CODE STARTS HERE
 // is hpol or aqme a better username/displayname (pls answer i need to pick)
 //hpol
+// hpol it is (originally it was hybridpolaris but i shortened to hpol)
 
 let questionsLeftToGenerate = 0;
 function setGenerationFinished(questions) {
@@ -160,15 +162,15 @@ document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
-  if (testIncludes.includes("writing")) {
-    setGenerationFinished(1);
-    const section1 = document.createElement("div");
-    const section1Title = document.createElement("h3");
-    const section1Question = document.createElement("p");
-    const section1Textbox = document.createElement("textarea");
-    const section1Response = document.createElement("p");
-    section1.className = "section";
-    section1Title.innerText = "Writing task 1";
+  setGenerationFinished(testIncludes.length);
+  if (testIncludes.includes("writing1")) {
+    const section = document.createElement("div");
+    const sectionTitle = document.createElement("h3");
+    const sectionQuestion = document.createElement("p");
+    const sectionTextbox = document.createElement("textarea");
+    const sectionResponse = document.createElement("p");
+    section.className = "section";
+    sectionTitle.innerText = "Writing task 1";
 
     getAIResponse(
       `Generate a ${translationKeys[testType]} Writing Task 1 question.
@@ -179,20 +181,20 @@ Requirements:
 - The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
 - Do not add anything before or after the question. Output the question alone.`
     ).then((response) => {
-      section1Question.innerHTML = marked.parse(response);
+      sectionQuestion.innerHTML = marked.parse(response);
       Questions.push({
         question: response,
-        answer: section1Textbox,
-        response: section1Response,
+        answer: sectionTextbox,
+        response: sectionResponse,
       });
       checkGenerationFinished();
     });
 
-    section1.appendChild(section1Title);
-    section1.appendChild(section1Question);
-    section1.appendChild(section1Textbox);
-    section1.appendChild(section1Response);
+    section.appendChild(sectionTitle);
+    section.appendChild(sectionQuestion);
+    section.appendChild(sectionTextbox);
+    section.appendChild(sectionResponse);
 
-    document.getElementById("test").appendChild(section1);
+    document.getElementById("test").appendChild(section);
   }
 }

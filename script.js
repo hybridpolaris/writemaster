@@ -87,7 +87,8 @@ IELTS_Slider.addEventListener("input", UpdateSliders);
 let GenerateTest = document.getElementById("generate_test");
 let Errors = document.getElementById("errors");
 let IncludeListening = document.getElementById("include_listening");
-let IncludeWriting = document.getElementById("include_writing");
+let IELTSIncludeWritingPart1 = document.getElementById("include_writing1");
+let IELTSIncludeWritingPart2 = document.getElementById("include_writing2");
 let IncludeReading = document.getElementById("include_reading");
 
 GenerateTest.addEventListener("click", () => {
@@ -106,9 +107,10 @@ GenerateTest.addEventListener("click", () => {
   }
   var HasListening = IncludeListening.checked;
   var HasReading = IncludeReading.checked;
-  var HasWriting = IncludeWriting.checked;
+  var IELTSHasWritingPart1 = IELTSIncludeWritingPart1.checked;
+  var IELTSHasWritingPart2 = IELTSIncludeWritingPart2.checked;
   Errors.innerHTML = "";
-  if (!(HasListening || HasReading || HasWriting)) {
+  if (!(HasListening || HasReading || IELTSHasWritingPart1 || IELTSHasWritingPart2)) {
     Errors.innerHTML = "You must select at least one skill to practice!";
     return;
   }
@@ -117,7 +119,7 @@ GenerateTest.addEventListener("click", () => {
   console.log(`Type: ${TypeOfTest.toUpperCase()}`);
   console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
-  console.log(`Include Writing: ${HasWriting ? "YES" : "NO"}`);
+  console.log(`Include Writing: ${IELTSHasWritingPart1 ? "YES" : "NO"}`);
   if (WhetherSlidersMatter) {
     console.log(
       `Current performance: ${
@@ -137,9 +139,23 @@ GenerateTest.addEventListener("click", () => {
   params.set("type", TypeOfTest);
   // right side of && evaluates (run) if left is true, otherwise it stops immediately
   // basically a 'shorthand if' if you will
-  HasListening && params.append("include", "listening");
-  HasReading && params.append("include", "reading");
-  HasWriting && params.append("include", "writing");
+  let parts = "";
+  if (HasListening) {
+	parts += "listening ";
+  }
+  if (HasReading) {
+	parts += "reading ";
+  }
+  if (IELTSHasWritingPart1) {
+	parts += "writing1 ";
+  }
+  if (IELTSHasWritingPart2) {
+	parts += "writing2 ";
+  }
+
+  params.append("include", parts.slice(0, -1));
+  console.log('help')
+  console.log(parts);
   // Who in their right mind thinks of short-circuit evaluation?
   // oh stack overflow users do
   window.location.href = "/test/index.html?" + params.toString();
