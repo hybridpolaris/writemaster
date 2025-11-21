@@ -107,17 +107,25 @@ function submit() {
   disableTest();
   ActionButton.disabled = true;
   Questions.forEach((e) => {
-    getAIResponse(`Generate a helpful review for the following ${translationKeys[testType]} practice test answer:\n
+    e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
+    getAIResponse(`Generate a helpful review for the following answer:\n
 ${e.answer.value}\n
 The question is:\n
 ${e.question}\n`).then((r) => {
-      e.response.innerHTML = marked.parse(r);
+      e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
+        r
+      )}</div>`;
     });
   });
 }
 
 async function getAIResponse(prompt = "") {
-  if (!enableAI) return `This is a response to the question "${prompt}"`;
+  if (!enableAI) {
+    await new Promise((resolve) =>
+      setTimeout(resolve, 5000 + Math.random() * 2000)
+    );
+    return `This is a response to the question "${prompt}"`;
+  }
 
   const response = await fetch(
     `https://writemaster-api.vercel.app/api/ai?prompt=${encodeURIComponent(
@@ -148,60 +156,58 @@ async function getAIResponse(prompt = "") {
 // hpol it is (originally it was hybridpolaris but i shortened to hpol)
 
 let questionsLeftToGenerate = 0;
-function setGenerationFinished(questions) {
+/*function setGenerationFinished(questions) {
   questionsLeftToGenerate = questions;
-}
+}*/
 
 function checkGenerationFinished() {
-  questionsLeftToGenerate -= 1;
+  questionsLeftToGenerate--;
   questionsLeftToGenerate <= 0 && readyTest();
 }
 /*on start */
+function Generate(name) {
+  questionsLeftToGenerate++;
+  const section = document.createElement("div");
+  const sectionTitle = document.createElement("h3");
+  const sectionQuestion = document.createElement("p");
+  const sectionTextbox = document.createElement("textarea");
+  const sectionResponse = document.createElement("p");
+  section.className = "section";
+  sectionTitle.innerText = name;
 
-function generateIELTSWritingQuestion(task) {
-	const section = document.createElement("div");
-    const sectionTitle = document.createElement("h3");
-    const sectionQuestion = document.createElement("p");
-    const sectionTextbox = document.createElement("textarea");
-    const sectionResponse = document.createElement("p");
-    section.className = "section";
-    sectionTitle.innerText = `Writing task ${task}`;
-
-    getAIResponse(
-      `Generate a ${translationKeys[testType]} Writing Task ${task} question.
+  getAIResponse(
+    `Generate a ${translationKeys[testType]} ${name} question.
 
 Requirements:
 - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
 - If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
 - The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
 - Do not add anything before or after the question. Output the question alone.`
-    ).then((response) => {
-      sectionQuestion.innerHTML = marked.parse(response);
-      Questions.push({
-        question: response,
-        answer: sectionTextbox,
-        response: sectionResponse,
-      });
-      checkGenerationFinished();
+  ).then((response) => {
+    sectionQuestion.innerHTML = marked.parse(response);
+    Questions.push({
+      question: response,
+      answer: sectionTextbox,
+      response: sectionResponse,
     });
+    checkGenerationFinished();
+  });
 
-    section.appendChild(sectionTitle);
-    section.appendChild(sectionQuestion);
-    section.appendChild(sectionTextbox);
-    section.appendChild(sectionResponse);
+  section.appendChild(sectionTitle);
+  section.appendChild(sectionQuestion);
+  section.appendChild(sectionTextbox);
+  section.appendChild(sectionResponse);
 
-    document.getElementById("test").appendChild(section);
+  document.getElementById("test").appendChild(section);
 }
-
 document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
   setGenerationFinished(testIncludes.length);
   if (testIncludes.includes("writing1")) {
-    generateIELTSWritingQuestion(1);
+    Generate("Writing Task 1");
   }
   if (testIncludes.includes("writing2")) {
-    generateIELTSWritingQuestion(2);
-  }
+    Generate("Writing Task 2");
 }

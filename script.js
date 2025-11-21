@@ -86,9 +86,10 @@ TOEIC_Slider.addEventListener("input", UpdateSliders);
 IELTS_Slider.addEventListener("input", UpdateSliders);
 let GenerateTest = document.getElementById("generate_test");
 let Errors = document.getElementById("errors");
-let IncludeListening = document.getElementById("include_listening");
 let IELTSIncludeWritingPart1 = document.getElementById("include_writing1");
 let IELTSIncludeWritingPart2 = document.getElementById("include_writing2");
+//let IncludeListening = document.getElementById("include_listening");
+let IncludeWriting = document.getElementById("include_writing");
 let IncludeReading = document.getElementById("include_reading");
 
 GenerateTest.addEventListener("click", () => {
@@ -105,19 +106,19 @@ GenerateTest.addEventListener("click", () => {
     Errors.innerHTML = "You must select one type of test!";
     return;
   }
-  var HasListening = IncludeListening.checked;
+  //var HasListening = IncludeListening.checked;
   var HasReading = IncludeReading.checked;
   var IELTSHasWritingPart1 = IELTSIncludeWritingPart1.checked;
   var IELTSHasWritingPart2 = IELTSIncludeWritingPart2.checked;
   Errors.innerHTML = "";
-  if (!(HasListening || HasReading || IELTSHasWritingPart1 || IELTSHasWritingPart2)) {
+  if (!( HasReading || IELTSHasWritingPart1 || IELTSHasWritingPart2)) {
     Errors.innerHTML = "You must select at least one skill to practice!";
     return;
   }
 
   console.log("===TEST DATA===");
   console.log(`Type: ${TypeOfTest.toUpperCase()}`);
-  console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
+  //console.log(`Include Listening: ${HasListening ? "YES" : "NO"}`);
   console.log(`Include Reading: ${HasReading ? "YES" : "NO"}`);
   console.log(`Include Writing: ${IELTSHasWritingPart1 ? "YES" : "NO"}`);
   if (WhetherSlidersMatter) {
