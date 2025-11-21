@@ -69,6 +69,7 @@ function updateTimer() {
 ActionButton.addEventListener("click", () => {
   if (stage == 0) {
     stage = 1;
+    document.getElementById("readyMessage").remove();
     ActionButton.innerHTML = "Submit";
     TestBox.className = "";
     startTimer(60 * 60); //can and will be changed later
@@ -79,7 +80,8 @@ ActionButton.addEventListener("click", () => {
 });
 
 function readyTest() {
-  document.getElementById("testrdy").innerHTML = "";
+  document.getElementById("testrdy").remove();
+  document.getElementById("readyMessage").className = "ready";
   ActionButton.disabled = false;
 }
 
@@ -109,12 +111,19 @@ function submit() {
   Questions.forEach((e) => {
     e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
     getAIResponse(`Generate a helpful review for the following answer:\n
-${e.answer.value}\n
-The question is:\n
-${e.question}\n`).then((r) => {
+    ${e.answer.value}\n
+    The question is:\n
+    ${e.question}\n\n
+    Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. Don't grade too sparingly, but do not be too harsh either, just rate as if you were an actual grader. Thanks.`).then((r) => {
       e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
         r
       )}</div>`;
+      
+      if (testType != "toeic") {
+        e.score = r.match(/Your band: (\d\.\d+)/i)[1]
+      } else {
+        e.score = r.match(/Your score: (\d+)/i)[1]
+      }
     });
   });
 }
@@ -164,7 +173,7 @@ function checkGenerationFinished() {
   questionsLeftToGenerate--;
   questionsLeftToGenerate <= 0 && readyTest();
 }
-/*on start */
+
 function Generate(name) {
   questionsLeftToGenerate++;
   const section = document.createElement("div");
@@ -174,15 +183,15 @@ function Generate(name) {
   const sectionResponse = document.createElement("p");
   section.className = "section";
   sectionTitle.innerText = name;
-
+  
   getAIResponse(
     `Generate a ${translationKeys[testType]} ${name} question.
-
-Requirements:
-- Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
-- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
-- The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
-- Do not add anything before or after the question. Output the question alone.`
+    
+    Requirements:
+    - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
+    - If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
+    - The question should be fully self-contained and formatted exactly as a standard IELTS Writing Task 1 prompt.
+    - Do not add anything before or after the question. Output the question alone.`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
     Questions.push({
@@ -192,7 +201,7 @@ Requirements:
     });
     checkGenerationFinished();
   });
-
+  
   section.appendChild(sectionTitle);
   section.appendChild(sectionQuestion);
   section.appendChild(sectionTextbox);
@@ -200,6 +209,8 @@ Requirements:
 
   document.getElementById("test").appendChild(section);
 }
+
+/*on start */
 document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
