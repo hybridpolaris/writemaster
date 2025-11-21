@@ -22,7 +22,7 @@ const translationKeys = {
 
 const params = new URLSearchParams(window.location.search);
 const testType = params.get("type");
-const testIncludes = params.getAll("include");
+const testIncludes = params.get("include").split(" ");
 document.title = `${translationKeys[testType]} practice - Writemaster`;
 if (!(testType in translationKeys) || testIncludes == []) {
   window.location.href = "/";
@@ -96,6 +96,7 @@ function enableTest() {
     e.disabled = false;
   });
 }
+
 let Questions = [];
 function submit() {
   stage = 2;
@@ -152,6 +153,7 @@ async function getAIResponse(prompt = "") {
 // CODE STARTS HERE
 // is hpol or aqme a better username/displayname (pls answer i need to pick)
 //hpol
+// hpol it is (originally it was hybridpolaris but i shortened to hpol)
 
 let questionsLeftToGenerate = 0;
 /*function setGenerationFinished(questions) {
@@ -202,8 +204,10 @@ document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
-  if (testIncludes.includes("writing")) {
+  setGenerationFinished(testIncludes.length);
+  if (testIncludes.includes("writing1")) {
     Generate("Writing Task 1");
-    Generate("Writing Task 2");
   }
+  if (testIncludes.includes("writing2")) {
+    Generate("Writing Task 2");
 }
