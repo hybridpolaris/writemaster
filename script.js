@@ -141,9 +141,9 @@ GenerateTest.addEventListener("click", () => {
   // right side of && evaluates (run) if left is true, otherwise it stops immediately
   // basically a 'shorthand if' if you will
   let parts = "";
-  if (HasListening) {
+  /*if (HasListening) {
 	parts += "listening ";
-  }
+  }*/
   if (HasReading) {
 	parts += "reading ";
   }

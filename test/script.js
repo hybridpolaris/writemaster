@@ -204,10 +204,10 @@ document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
 if (testType != "toeic") {
-  setGenerationFinished(testIncludes.length);
   if (testIncludes.includes("writing1")) {
     Generate("Writing Task 1");
   }
   if (testIncludes.includes("writing2")) {
     Generate("Writing Task 2");
+  }
 }
