@@ -55,6 +55,7 @@
   filter: blur(10px);
   pointer-events: none;
   cursor: not-allowed;
+  user-select: none;
 }
 
 .ready {

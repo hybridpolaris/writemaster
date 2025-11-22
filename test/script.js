@@ -160,11 +160,6 @@ async function getAIResponse(prompt = "") {
   return data.candidates[0].content.parts[0].text;
 }
 
-// CODE STARTS HERE
-// is hpol or aqme a better username/displayname (pls answer i need to pick)
-//hpol
-// hpol it is (originally it was hybridpolaris but i shortened to hpol)
-
 let questionsLeftToGenerate = 0;
 /*function setGenerationFinished(questions) {
   questionsLeftToGenerate = questions;
@@ -185,6 +180,7 @@ function Generate(name) {
   section.className = "section";
   sectionTitle.innerText = name;
   
+  // just found out if you change the indentation there the thing breaks
   getAIResponse(
     `Generate a ${translationKeys[testType]} ${name} question.
     
