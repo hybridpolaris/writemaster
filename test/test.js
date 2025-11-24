@@ -3,10 +3,9 @@ const enableAI = false;
 export async function getAIResponse(prompt = "") {
   if (!enableAI) {
     await new Promise((resolve) =>
-      setTimeout(resolve, 5000 + Math.random() * 2000)
+      setTimeout(resolve, 2000 + Math.random() * 1000)
     );
-    //return `This is a response to the question "${prompt}"`;
-  return prompt
+    return `This is a response to the question "${prompt}"`;
   }
 
   const response = await fetch(
@@ -101,12 +100,12 @@ export class Questions {
     // just found out if you change the indentation there the thing breaks
     getAIResponse(
       `Generate a ${test} ${name} question.
-      
-  Requirements:
-  - Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
-  - If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
-  - The question should be fully self-contained and formatted exactly as a standard ${test} ${name} prompt.
-  - Do not add anything before or after the question. Output the question alone.`
+
+Requirements:
+- Produce *only* the question text. Do not include titles, tips, instructions, greetings, closings, word-count reminders, or any meta commentary.
+- If the task involves data (charts, graphs, trends, comparisons, processes, etc.), represent all data using Markdown tables only. Do not include images, ASCII art, or non-table charts.
+- The question should be fully self-contained and formatted exactly as a standard ${test} ${name} prompt.
+- Do not add anything before or after the question. Output the question alone.`
     ).then((response) => {
       sectionQuestion.innerHTML = marked.parse(response);
       this.questions.push({
@@ -116,7 +115,7 @@ export class Questions {
       });
       this.checkGenerationFinished();
     });
-    
+  
     section.appendChild(sectionTitle);
     section.appendChild(sectionQuestion);
     section.appendChild(sectionTextbox);
@@ -160,21 +159,22 @@ export class Test {
     this.Questions.questions.forEach((e) => {
       e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
       getAIResponse(`Generate a helpful review for the following answer:
-  ${e.answer.value}
-  The question is:
-  ${e.question}
-  
-  Notes: Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at THE END of your response. ONLY SAY THE ACTUAL GRADING AND NOT ANYTHING ELSE, NO "here's what your score would've been with my improved essay." 
-  **VERY IMPORTANT**: Don't grade too harshly, but not too sparingly either. Rate realisticly and objectively, do not just pick an average-ish score everytime. Thanks.`).then((r) => {
+${e.answer.value}\n
+The question is:\n
+${e.question}\n\n
+Requirements:
+- Please grade the answer with a specific score/band and not just a range. Use the format: "Your band: 1.0" (replace with actual score) for IELTS and "Your score: 100" (replace with actual score) for TOEIC, and place them at the end of your response. Please omit any unnecessary text or suggestions.
+- Don't grade too harsh, but not too sparingly either. Please generate the most accurate score you could manage.`).then(
+      (r) => {
         e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
           r
         )}</div>`;
         
-        let score = r.match(/Your (score|band): (\d\.\d+|\d+)/i);
+        let score = r.match(/Your (band|score): (\d\.\d+|\d+)/);
         if (score == null) {
-          window.alert("the ai messed up and didnt give you a score.");
+          window.alert('the ai messed up and didnt give a score.');
         } else {
-          e.score = score;
+          e.score = score[2];
         }
       });
     });

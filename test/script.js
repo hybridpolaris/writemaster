@@ -24,7 +24,7 @@ const params = new URLSearchParams(window.location.search);
 const testType = params.get("type");
 const testIncludes = params.get("include").split(" ");
 document.title = `${translationKeys[testType]} practice - Writemaster`;
-if (!(testType in translationKeys) || testIncludes == []) {
+if (!(testType in translationKeys) || testIncludes == [] || testIncludes === null) {
   window.location.href = "/";
 }
 
