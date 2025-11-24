@@ -1,4 +1,10 @@
 const enableAI = false;
+if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+  console.log("Running locally");
+} else {
+  console.log("Running on prod");
+  enableAI = true;
+}
 
 export async function getAIResponse(prompt = "") {
   if (!enableAI) {
