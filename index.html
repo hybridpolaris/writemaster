@@ -27,8 +27,18 @@
         font-family: "Material Symbols Outlined";
       }
     </style>
+    <script>
+      (function() {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        console.log(theme);
+      
+        document.documentElement.classList.toggle("dark-mode", theme === "dark");
+        document.documentElement.classList.remove("unready");
+      })();
+    </script>
   </head>
-
   <body>
     <div class="main">
       <!--<header>
@@ -198,21 +208,61 @@
               </div>
             </div>
           </div>-->
-          <div class="option2 vertical_when_narrow">
-            <div class="label"><span>Include Writing Part 1</span></div>
-            <div class="switch_container">
-              <div class="switch">
-                <input type="checkbox" id="include_writing1" />
-                <span class="slider"></span>
+          <div id="ielts_options">
+            <div class="option2 vertical_when_narrow">
+              <div class="label"><span>Include Writing Part 1</span></div>
+              <div class="switch_container">
+                <div class="switch">
+                  <input type="checkbox" id="include_writing1" />
+                  <span class="slider"></span>
+                </div>
+              </div>
+            </div>
+            <div class="option2 vertical_when_narrow">
+              <div class="label"><span>Include Writing Part 2</span></div>
+              <div class="switch_container">
+                <div class="switch">
+                  <input type="checkbox" id="include_writing2" />
+                  <span class="slider"></span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="option2 vertical_when_narrow">
-            <div class="label"><span>Include Writing Part 2</span></div>
-            <div class="switch_container">
-              <div class="switch">
-                <input type="checkbox" id="include_writing2" />
-                <span class="slider"></span>
+          <div id="toeic_options" class="hidden">
+            <div class="option2 vertical_when_narrow">
+              <div class="label"><span>Include Writing Tasks 1–5</span></div>
+              <div class="switch_container">
+                <div class="switch">
+                  <input type="checkbox" id="include_writing1to5" />
+                  <span class="slider"></span>
+                </div>
+              </div>
+            </div>
+            <div class="option2 vertical_when_narrow">
+              <div class="label"><span>Include Writing Task 6</span></div>
+              <div class="switch_container">
+                <div class="switch">
+                  <input type="checkbox" id="include_writing6" />
+                  <span class="slider"></span>
+                </div>
+              </div>
+            </div>
+            <div class="option2 vertical_when_narrow">
+              <div class="label"><span>Include Writing Task 7</span></div>
+              <div class="switch_container">
+                <div class="switch">
+                  <input type="checkbox" id="include_writing7" />
+                  <span class="slider"></span>
+                </div>
+              </div>
+            </div>
+            <div class="option2 vertical_when_narrow">
+              <div class="label"><span>Include Writing Task 8</span></div>
+              <div class="switch_container">
+                <div class="switch">
+                  <input type="checkbox" id="include_writing8" />
+                  <span class="slider"></span>
+                </div>
               </div>
             </div>
           </div>

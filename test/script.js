@@ -1,18 +1,18 @@
-const enableAI = false;
+import { Test, getAIResponse } from "./test.js";
 
-var selected = localStorage.getItem("theme");
-selected = selected ?? "light";
-if (selected == "dark") {
-  document.body.className = "dark-mode";
-} else if (selected == "light") {
-  document.body.className = "";
-} else {
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.body.className = "dark-mode";
-  } else {
-    document.body.className = "";
-  }
-}
+// var selected = localStorage.getItem("theme");
+// selected = selected ?? "light";
+// if (selected == "dark") {
+//   document.body.className = "dark-mode";
+// } else if (selected == "light") {
+//   document.body.className = "";
+// } else {
+//   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+//     document.body.className = "dark-mode";
+//   } else {
+//     document.body.className = "";
+//   }
+// }
 
 const translationKeys = {
   ielts_gen: "General Training IELTS",
@@ -32,175 +32,26 @@ if (!(testType in translationKeys) || testIncludes == []) {
 }
 
 let stage = 0;
-let timeLeft = 0; // seconds
-let intervalId = 0; // what
-const TimerElement = document.getElementById("timer");
-
-function setTimer(time) {
-  // me when i spaghetti code
-  timeLeft = Date.now() + 1000 * time;
-  updateTimer();
-  timeLeft = time;
-}
-
-function startTimer() {
-  timeLeft = Date.now() + 1000 * timeLeft;
-  intervalId = setInterval(updateTimer, 100);
-}
-
-const ActionButton = document.getElementById("submit_btn");
-const TestBox = document.getElementById("test");
-function updateTimer() {
-  // please make variable names more self explanatory :(
-  let et = Math.ceil((timeLeft - Date.now()) / 1000);
-  if (et <= 0) {
-    clearInterval(intervalId);
-    TimerElement.innerHTML = "0:00";
-    TimerElement.style = /*css*/ "color:var(--accent-color)";
-    submit();
-    return;
-  } else {
-    TimerElement.style = "";
-  }
-
-  let seconds = (et % 60).toString();
-  let minutes = (Math.floor(et / 60) % 60).toString();
-  let hours = Math.floor(et / 3600).toString();
-  if (hours == 0) {
-    TimerElement.innerHTML = `${minutes}:${seconds.padStart(2, "0")}`;
-  } else {
-    TimerElement.innerHTML = `${hours}:${minutes.padStart(
-      2,
-      "0"
-    )}:${seconds.padStart(2, "0")}`;
-  }
-}
-let testTime = 0;
-ActionButton.addEventListener("click", () => {
+Test.ActionButton.addEventListener("click", () => {
   if (stage == 0) {
     stage = 1;
     document.getElementById("readyMessage").remove();
-    ActionButton.innerHTML = "Submit";
-    TestBox.className = "";
-    startTimer();
-    enableTest();
+    Test.ActionButton.innerHTML = "Submit";
+    Test.TestBox.className = "";
+    Test.Timer.start();
+    Test.enable();
   } else {
-    window.confirm("Are you sure you want to submit?") && submit();
+    if (!window.confirm("Are you sure you want to submit?")) return;
+    stage = 2;
+    Test.Timer.update(); /* window.confirm() function blocks that from updating for some reason */
+    Test.submit();
   }
 });
 
-function readyTest() {
-  document.getElementById("testrdy").remove();
-  document.getElementById("readyMessage").className = "ready";
-  ActionButton.disabled = false;
-}
-
-function disableTest() {
-  TestBox.querySelectorAll("input, textarea").forEach((e) => {
-    e.disabled = true;
-  });
-}
-disableTest();
-
-function enableTest() {
-  document.getElementById("test").className = "";
-  TestBox.querySelectorAll("input, textarea").forEach((e) => {
-    e.disabled = false;
-  });
-}
-
-let Questions = [];
-function submit() {
-  stage = 2;
-  let score = 0;
-  let count = 0;
-  let generated = 0;
-  TimerElement.style = /*css*/ "color:var(--accent-color)";
-  clearInterval(intervalId);
-  console.log("Test is done!");
-  //alert("uiia");
-  disableTest();
-  ActionButton.disabled = true;
-  Questions.forEach((e) => {
-    generated++;
-    e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
-
-    getAIResponse(`Generate a helpful review for the following answer:\n
-${e.answer.value}\n
-The question is:\n
-${e.question}\n\n
-Requirements:
-- Evaluate the quality, clarity, correctness, and completeness of the answer.
-- Provide a brief constructive review.
-- At the end, output exactly one integer score from 0 to 100 in the format: "Your score: XX".
-- No other scoring formats or text after the score.
-- Be fair but not harsh.`).then((r) => {
-      e.response.innerHTML = /*html*/ `Here's what the AI thinks about your work.<br><div class="response">${marked.parse(
-        r
-      )}</div>`;
-      if (enableAI) {
-        e.score = parseInt(r.match(/Your score:\s*(\d+)/i)[1]);
-      } else {
-        e.score = 69; //funny haha number if AI is disabled
-      }
-      score += e.score;
-      count++;
-      generated--;
-      if (generated == 0) {
-        score /= count;
-        TestBox.innerHTML += /*html*/ `<h1>Your score is <code>${score.toFixed(
-          1
-        )}<small>/100</small></code>, corresponding to a ${
-          testType == "toeic"
-            ? `score of <code>${Math.floor(score * 10)}</code>`
-            : `band of <code>${(Math.floor(score * 0.9) / 10).toFixed(
-                1
-              )}</code>`
-        }</h1>`;
-      }
-    });
-  });
-}
-
-async function getAIResponse(prompt = "") {
-  if (!enableAI) {
-    await new Promise((resolve) =>
-      setTimeout(resolve, 2000 + Math.random() * 1000)
-    );
-    return `This is a response to the question "${prompt}"`;
-    //return prompt;
-  }
-  const response = await fetch(
-    `https://writemaster-api.vercel.app/api/ai?prompt=${encodeURIComponent(
-      prompt
-    )}`
-  );
-
-  if (response.error?.code == 429) {
-    window.alert(
-      "We have reached our rate limit for AI usage, please try again later."
-    );
-    throw new Error("RATE LIMITED: please try again later shortly.");
-  } else if (response.error?.code) {
-    window.alert(
-      "Encountered unknown errors while prompting the AI, please try again later."
-    );
-    throw new Error("error :(");
-  }
-
-  const data = await response.json();
-  console.log(data);
-  return data.candidates[0].content.parts[0].text;
-}
-
 let questionsLeftToGenerate = 0;
-/*function setGenerationFinished(questions) {
-  questionsLeftToGenerate = questions;
-}*/
-
 function checkGenerationFinished() {
   questionsLeftToGenerate--;
-  questionsLeftToGenerate <= 0 && readyTest();
+  questionsLeftToGenerate <= 0 && Test.ready();
 }
 
 function Generate(name, isReading = false, from = 0, to = 0, exact = "") {
@@ -240,7 +91,7 @@ ${
 - If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.`
   ).then((response) => {
     sectionQuestion.innerHTML = marked.parse(response);
-    Questions.push({
+    Test.Questions.questions.push({
       question: response,
       answer: sectionTextbox,
       response: sectionResponse,
@@ -260,6 +111,8 @@ ${
 document.getElementById("title").innerText = `${translationKeys[
   testType
 ].toUpperCase()} PRACTICE TEST`;
+
+Test.disable();
 if (testType != "toeic") {
   let time = 0;
   if (testIncludes.includes("reading")) {
@@ -301,15 +154,17 @@ if (testType != "toeic") {
 
     time += 60 * 60; // 60 minutes
   }
+
   if (testIncludes.includes("writing1")) {
-    Generate("Writing Task 1");
+    Test.Questions.generateWriting("Writing Task 1", translationKeys[testType]);
     time += 20 * 60; // 20 minutes
   }
+  
   if (testIncludes.includes("writing2")) {
-    Generate("Writing Task 2");
+    Test.Questions.generateWriting("Writing Task 2", translationKeys[testType]);
     time += 40 * 60; // 40 minutes
   }
-  setTimer(time);
+  Test.Timer.set(time);
 } else {
   // TOEIC test generation logic
   let time = 0;
@@ -355,18 +210,28 @@ if (testType != "toeic") {
     time += 75 * 60; // TOEIC Reading section duration
   }
 
-  if (testIncludes.includes("writing1")) {
-    Generate("TOEIC Writing Task 6 (Respond to a Written Request)");
+  if (testIncludes.includes("writing1to5")) {
+    Test.Questions.generateTOEICWritingSection1(1);
+    Test.Questions.generateTOEICWritingSection1(2);
+    Test.Questions.generateTOEICWritingSection1(3);
+    Test.Questions.generateTOEICWritingSection1(4);
+    Test.Questions.generateTOEICWritingSection1(5);
+    time = 10 * 60;
+  }
+  if (testIncludes.includes("writing6")) {
+    Test.Questions.generateWriting("Writing Task 6 (Respond to a Written Request)", "TOEIC");
     time += 10 * 60;
   }
-  if (testIncludes.includes("writing1")) {
-    Generate("TOEIC Writing Task 7 (Respond to a Written Request)");
+  if (testIncludes.includes("writing7")) {
+    Test.Questions.generateWriting("Writing Task 7 (Respond to a Written Request)", "TOEIC");
     time += 10 * 60;
   }
-  if (testIncludes.includes("writing2")) {
-    Generate("TOEIC Writing Task 8 (Essay)");
-    time += 10 * 60;
+  if (testIncludes.includes("writing8")) {
+    Test.Questions.generateWriting("Writing Task 8 (Opinion Essay)", "TOEIC");
+    time += 30 * 60;
   }
 
-  setTimer(time);
+  Test.Timer.set(time);
 }
+
+window.Test = Test;
