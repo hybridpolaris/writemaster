@@ -223,7 +223,6 @@ function UpdateDarkMode() {
 document.querySelectorAll('input[name="theme"]').forEach((e) => {
   e.addEventListener("change", UpdateDarkMode);
 });
-UpdateDarkMode();
 //DarkModeSelector.addEventListener("change", UpdateDarkMode);
 const c = "01234567890123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 const randc = () => {

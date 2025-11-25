@@ -416,6 +416,7 @@ body {
 }
 
 /* === Dark Mode (activated when body has class .dark-mode) === */
+html.dark-mode body,
 body.dark-mode {
   background-image: radial-gradient(
     circle at center,
@@ -618,4 +619,12 @@ input:checked + .slider:before {
 }
 ::-webkit-scrollbar-thumb {
   background-color: var(--accent-color);
+}
+
+html.unready {
+  visibility: hidden;
+}
+
+html {
+  visibility: visible;
 }

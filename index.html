@@ -27,8 +27,18 @@
         font-family: "Material Symbols Outlined";
       }
     </style>
+    <script>
+      (function() {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        console.log(theme);
+      
+        document.documentElement.classList.toggle("dark-mode");
+        document.documentElement.classList.remove("unready");
+      })();
+    </script>
   </head>
-
   <body>
     <div class="main">
       <!--<header>

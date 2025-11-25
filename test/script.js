@@ -1,18 +1,18 @@
 import { Test, getAIResponse } from "./test.js";
 
-var selected = localStorage.getItem("theme");
-selected = selected ?? "light";
-if (selected == "dark") {
-  document.body.className = "dark-mode";
-} else if (selected == "light") {
-  document.body.className = "";
-} else {
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.body.className = "dark-mode";
-  } else {
-    document.body.className = "";
-  }
-}
+// var selected = localStorage.getItem("theme");
+// selected = selected ?? "light";
+// if (selected == "dark") {
+//   document.body.className = "dark-mode";
+// } else if (selected == "light") {
+//   document.body.className = "";
+// } else {
+//   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+//     document.body.className = "dark-mode";
+//   } else {
+//     document.body.className = "";
+//   }
+// }
 
 const translationKeys = {
   ielts_gen: "General Training IELTS",
