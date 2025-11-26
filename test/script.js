@@ -53,7 +53,14 @@ function checkGenerationFinished() {
   questionsLeftToGenerate--;
   questionsLeftToGenerate <= 0 && Test.ready();
 }
+/*const renderer = new marked.Renderer();
 
+renderer.link = function (href, title, text) {
+  // Return a span that looks like a link but is not clickable
+  return `<span style="text-decoration: underline;">${text}</span>`;
+};*/
+
+//marked.setOptions({ renderer });
 function Generate(name, isReading = false, from = 0, to = 0, exact = "") {
   questionsLeftToGenerate++;
   const section = document.createElement("div");
@@ -75,7 +82,7 @@ Requirements:
 
 ${
   isReading
-    ? `- Produce **only** reading questions numbered from ${from} to ${to}. Remember, ${exact}. Do **not** generate any questions outside this range.
+    ? `- Produce **only** reading questions numbered from ${from} to ${to}. Do **not** generate any questions outside this range. \n - Remember, ${exact}. 
 - The passage must be original, complete, and fully self-contained.
 - Do not summarize, shorten, merge, or omit any parts of the selected questions.
 - Ensure every selected question and every answer option (if any) appears in full.
@@ -128,28 +135,28 @@ if (testType != "toeic") {
       true,
       8,
       14,
-      "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity"
+      "all questions use the same text, and that the answerer should determine whether statements agree with the information. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     );
     Generate(
       "Reading Tasks [SECTION 2]",
       true,
       15,
       20,
-      "all questions use the same text, and that the answerer should provide responses according to the passage. Maintain single-context integrity"
+      "all questions use the same text, and that the answerer should provide responses according to the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     );
     Generate(
       "Reading Tasks [SECTION 2]",
       true,
       21,
       27,
-      "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity"
+      "all questions use the same text, and that the answerer should complete the notes using ONE WORD ONLY from the passage. Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     );
     Generate(
       "Reading Tasks [SECTION 3]",
       true,
       28,
       40,
-      "all questions use the same long text. Include paragraph heading matching (Q28–36) and summary completion (Q37–40). Maintain single-context integrity"
+      "all questions use the same long text. Include paragraph heading matching (Q28–36) and summary completion (Q37–40). Maintain single-context integrity\n - Generate a connected text with multiple paragraphs, not several disconnected options, which is allowed, but highly discouraged."
     );
 
     time += 60 * 60; // 60 minutes
@@ -159,7 +166,7 @@ if (testType != "toeic") {
     Test.Questions.generateWriting("Writing Task 1", translationKeys[testType]);
     time += 20 * 60; // 20 minutes
   }
-  
+
   if (testIncludes.includes("writing2")) {
     Test.Questions.generateWriting("Writing Task 2", translationKeys[testType]);
     time += 40 * 60; // 40 minutes
@@ -219,11 +226,17 @@ if (testType != "toeic") {
     time = 10 * 60;
   }
   if (testIncludes.includes("writing6")) {
-    Test.Questions.generateWriting("Writing Task 6 (Respond to a Written Request)", "TOEIC");
+    Test.Questions.generateWriting(
+      "Writing Task 6 (Respond to a Written Request)",
+      "TOEIC"
+    );
     time += 10 * 60;
   }
   if (testIncludes.includes("writing7")) {
-    Test.Questions.generateWriting("Writing Task 7 (Respond to a Written Request)", "TOEIC");
+    Test.Questions.generateWriting(
+      "Writing Task 7 (Respond to a Written Request)",
+      "TOEIC"
+    );
     time += 10 * 60;
   }
   if (testIncludes.includes("writing8")) {

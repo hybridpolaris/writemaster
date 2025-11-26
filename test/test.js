@@ -1,6 +1,10 @@
-const enableAI = false;
-if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+let enableAI = false;
+if (
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+) {
   console.log("Running locally");
+  enableAI = confirm("Enable?");
 } else {
   console.log("Running on prod");
   enableAI = true;
@@ -48,7 +52,7 @@ export class Timer {
     this.update();
     this.timeGiven = time;
   }
-    
+
   static start() {
     this.timeLeft = Date.now() + 1000 * this.timeGiven;
     this.intervalId = setInterval(this.update.bind(this), 100);
@@ -66,7 +70,7 @@ export class Timer {
     } else {
       this.TimerElement.style = "";
     }
-  
+
     let seconds = (et % 60).toString();
     let minutes = (Math.floor(et / 60) % 60).toString();
     let hours = Math.floor(et / 3600).toString();
@@ -99,7 +103,7 @@ export class Questions {
     const sectionResponse = document.createElement("p");
     section.className = "section";
     sectionTitle.innerText = name;
-  
+
     // just found out if you change the indentation there the thing breaks
     getAIResponse(
       `Generate a ${test} ${name} question.
@@ -121,12 +125,12 @@ Requirements:
       });
       this.checkGenerationFinished();
     });
-  
+
     section.appendChild(sectionTitle);
     section.appendChild(sectionQuestion);
     section.appendChild(sectionTextbox);
     section.appendChild(sectionResponse);
-  
+
     document.getElementById("test").appendChild(section);
   }
 
@@ -139,7 +143,7 @@ Requirements:
     const sectionResponse = document.createElement("p");
     section.className = "section";
     sectionTitle.innerText = `TOEIC Writing Task ${task} (Write a sentence on a picture)`;
-    
+
     const images = [
       "AtBreathtaking.png",
       "BookshelfLibrary.png",
@@ -159,36 +163,37 @@ Requirements:
       "StudentLaboratory.png",
       "StudentsHomework.png",
       "SuitcaseAirport.png",
-      "UmbrellaRainy.png"
-    ]
+      "UmbrellaRainy.png",
+    ];
 
     const picture = images[Math.floor(Math.random() * images.length)];
     const questionTextElement = document.createElement("p");
     const questionPictureElement = document.createElement("img");
-    questionTextElement.innerHTML =  marked.parse("Write **ONE** sentence to describe the picture above.");
+    questionTextElement.innerHTML = marked.parse(
+      "Write **ONE** sentence to describe the picture above."
+    );
     questionPictureElement.src = `${window.location.origin}/Questions/TOEIC/Part1/${picture}`;
     sectionQuestion.appendChild(questionPictureElement);
     sectionQuestion.appendChild(questionTextElement);
     sectionTextbox.className = "short";
     Test.Questions.questions.push({
-      question: "Write **ONE** sentence based on the picture given. For the AI grading this, assume there is a picure, and assume the exam taker is describing correctly. Rate based on how detailed it is, and **do not mention this.**",
+      question:
+        "Write **ONE** sentence based on the picture given. For the AI grading this, assume there is a picure, and assume the exam taker is describing correctly. Rate based on how detailed it is, and **do not mention this.**",
       answer: sectionTextbox,
       response: sectionResponse,
     });
 
     new Promise((resolve) =>
       setTimeout(resolve, 2000 + Math.random() * 1000)
-    ).then(
-      this.checkGenerationFinished.bind(this)
-    );
+    ).then(this.checkGenerationFinished.bind(this));
     // do this so that this doesn't finish all before the other parts
     // which makes the test "ready" before the other parts load
-  
+
     section.appendChild(sectionTitle);
     section.appendChild(sectionQuestion);
     section.appendChild(sectionTextbox);
     section.appendChild(sectionResponse);
-  
+
     document.getElementById("test").appendChild(section);
   }
 }
@@ -208,13 +213,13 @@ export class Test {
     document.getElementById("readyMessage").className = "ready";
     this.ActionButton.disabled = false;
   }
-  
+
   static disable() {
     this.TestBox.querySelectorAll("input, textarea").forEach((e) => {
       e.disabled = true;
     });
   }
-  
+
   static enable() {
     document.getElementById("test").className = "";
     this.TestBox.querySelectorAll("input, textarea").forEach((e) => {
@@ -235,7 +240,7 @@ export class Test {
     this.Questions.questions.forEach((e) => {
       generated++;
       e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
-  
+
       getAIResponse(`Generate a helpful review for the following answer:\n
 ${e.answer.value}\n
 The question is:\n
@@ -253,18 +258,14 @@ Requirements:
         let match = r.match(/Your (band|score):\s*(\d+|\d\.\d)/i);
         if (!enableAI) {
           // fake data!1111!!!!!!!11!1!
-          match = [
-            'stuff',
-            'band',
-            6.21
-          ]
+          match = ["stuff", "band", 6.21];
           // funny haha number if no ai
           // band 6.21 = 69/100
         }
         if (match[1] == "band") {
-          e.score = parseFloat(match[2]) / 9 * 100;
+          e.score = (parseFloat(match[2]) / 9) * 100;
         } else {
-          e.score = (parseInt(match[2]) - 10) / 980 * 100;
+          e.score = ((parseInt(match[2]) - 10) / 980) * 100;
           // TOEIC ranges from 10 to 990
         }
         avgScore += e.score;
@@ -280,7 +281,7 @@ Requirements:
             match[1] == "score" /* if it said score, thats TOEIC */
               ? "score"
               : "band"
-          } of <code>${match[2]}`
+          } of <code>${match[2]}`;
           this.TestBox.appendChild(scoreElement);
         }
       });
