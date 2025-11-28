@@ -88,7 +88,6 @@ export class Timer {
 export class Questions {
   static questions = [];
   static questionsLeftToGenerate = 0;
-
   static checkGenerationFinished() {
     this.questionsLeftToGenerate--;
     this.questionsLeftToGenerate <= 0 && Test.ready();
@@ -134,7 +133,7 @@ Requirements:
     document.getElementById("test").appendChild(section);
   }
 
-  static generateTOEICWritingSection1(task) {
+  static generateTOEICWritingSection1(task, excl = []) {
     this.questionsLeftToGenerate++;
     const section = document.createElement("div");
     const sectionTitle = document.createElement("h3");
@@ -162,11 +161,14 @@ Requirements:
       { img: "ReviewColleague.png", desc: "Two office employees pointing at a clipboard." },
       { img: "StudentLaboratory.png", desc: "Two students messing with a few beakers containing colored fluids. On the background there are more students out of focus." },
       { img: "StudentsHomework.png", desc: "Seven students sitting next to a table with assorted documents, talking." },
-      { img: "SuitcaseAirport.png", desc: "A line of people patiently waiting next to the suitcase conveyor." },
-      { img: "UmbrellaRainy.png", desc: "" },
+      { img: "SuitcaseAirport.png", desc: "A line of people patiently waiting next to the suitcase conveyor. at the airport." },
+      { img: "UmbrellaRainy.png", desc: "Around 6 to 9 people walking across a zebra crossing, holding umbrellas because it's raining." },
     ];
-
-    const picture = images[Math.floor(Math.random() * images.length)];
+    let p = Math.floor(Math.random() * images.length);
+    while (excl.includes(p)) {
+      p = Math.floor(Math.random() * images.length);
+    }
+    const picture = images[p];
     const questionTextElement = document.createElement("p");
     const questionPictureElement = document.createElement("img");
     //prettier-ignore
@@ -182,7 +184,7 @@ Requirements:
     Test.Questions.questions.push({
       question: `Write **ONE** sentence based on the picture given. You must use these words: ${words}. ${
         picture.desc != ""
-          ? ` The following description has been prepared by the testmaker:${picture.desc}`
+          ? ` The following description has been prepared by the testmaker: "${picture.desc}". The answer doesn't need to contain all parts of the description.`
           : " Unfortunately, the testmaker has not prepared a description for this image in textual form."
       }`,
       answer: sectionTextbox,
@@ -201,6 +203,7 @@ Requirements:
     section.appendChild(sectionResponse);
 
     document.getElementById("test").appendChild(section);
+    return excl.concat(p);
   }
 }
 

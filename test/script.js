@@ -218,11 +218,12 @@ if (testType != "toeic") {
   }
 
   if (testIncludes.includes("writing1to5")) {
-    Test.Questions.generateTOEICWritingSection1(1);
-    Test.Questions.generateTOEICWritingSection1(2);
-    Test.Questions.generateTOEICWritingSection1(3);
-    Test.Questions.generateTOEICWritingSection1(4);
-    Test.Questions.generateTOEICWritingSection1(5);
+    let excl = [];
+    excl = Test.Questions.generateTOEICWritingSection1(1);
+    excl = Test.Questions.generateTOEICWritingSection1(2, excl);
+    excl = Test.Questions.generateTOEICWritingSection1(3, excl);
+    excl = Test.Questions.generateTOEICWritingSection1(4, excl);
+    excl = Test.Questions.generateTOEICWritingSection1(5, excl);
     time = 10 * 60;
   }
   if (testIncludes.includes("writing6")) {
