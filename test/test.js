@@ -147,7 +147,8 @@ Requirements:
         question: response,
         answer: sectionTextbox,
         response: sectionResponse,
-        type: (test == "TOEIC") ? "toeic" : "ielts"
+        type: (test == "TOEIC") ? "toeic" : "ielts",
+        skill: "writing"
       });
       this.checkGenerationFinished();
     });
@@ -223,6 +224,7 @@ Requirements:
       answer: sectionTextbox,
       response: sectionResponse,
       type: "toeic",
+      skill: "writing"
     });
 
     new Promise((resolve) =>
@@ -238,6 +240,70 @@ Requirements:
 
     document.getElementById("test").appendChild(section);
     return excl.concat(p);
+  }
+
+  
+  /**
+   * Generates an IELTS Reading question
+   * @param {string} name Section name
+   * @param {string} test Test name
+   * @param {number} from Starting question
+   * @param {number} to Ending question
+   * @param {"true_false_not_given" |
+   *         "matching_information" |
+   *         "short_answer" |
+   *         "sentence_completion" |
+   *         "matching_features" |
+   *         "matching_headings" |
+   *         "multiple_choice" |
+   *         "summary_completion"} type Question type
+   */
+  static generateIELTSReading(name, test, from, to, type) {
+    this.questionsLeftToGenerate++;
+    const section = document.createElement("div");
+    const sectionTitle = document.createElement("h3");
+    const sectionQuestion = document.createElement("p");
+    const sectionTextbox = document.createElement("div");
+    const sectionResponse = document.createElement("p");
+    section.className = "section";
+    sectionTitle.innerText = name;
+
+    const questionTypes = {
+      "true_false_not_given": "True / False / Not Given. **Required format:** \`[Question Number]. [Question]. \`",
+      "matching_information": "Match statements (not headings) to paragraphs. **Required format:** \`[Question number]. [Capital letter for each statement]-[Statement]. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
+      "matching_headings": "Match headings (not statements) to paragraphs. **Required format:** \`[Question number]. [Question]. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
+      "matching_features": "Match features (not headings or statements) to statements/attributes. **Required format:** \`Given these statements: \n[Capital letter for each statement]. [Statement].\` \`[Question number]. [Feature].\` Remember to say \`Match each statement to ONE feature.\` in question requirement",
+      "summary_completion": "Complete a given summary using words from the passage. **Give a summary of the passage with some keywords replaced with this required format:** \`[Question number]. ________\`",
+      "sentence_completion": "Complete a given sentence using words from the passage. **Give a sentence related to the passage in this *required format:* \`[Question number]. [Sentence]\` with some keywords replaced with this:** \`________\` Remember to say \`Fill in the blanks using words from the passage using NO MORE THAN THREE WORDS\` in the question requirement.",
+      "multiple_choice": "Multiple choice question. **Required format:** \`[Question number]. [Question]?\` \`[A, B, C or D]. [Choice].\`",
+      "short_answer": "Answer questions using NO MORE THAN THREE WORDS using words from the passage. **Required format: \`[Question number]. [Question]? \`**"
+    }
+
+    getAIResponse(
+        `Generate a ${test} ${name} question.
+    
+Requirements:
+- Output **only** the question text and its required reading passage**. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
+- The response **must** begin with the full reading passage, followed by a \`---\` horizontal line, followed by the question(s).
+- Produce **only** reading questions numbered from ${from} to ${to}. Do **not** generate any questions outside this range.
+- The question type is: ${questionTypes[type]}. Remember to say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test)
+- The passage must be original, complete, and fully self-contained.
+- Do not summarize, shorten, merge, or omit any parts of the selected questions.
+- Ensure every selected question and every answer option (if any) appears in full.
+- Place a newline after each question and after each answer option.
+- The passage and questions must be fully self-contained and formatted exactly like a standard ${test} ${name} prompt.
+- Do not add anything before or after the passage + question text.
+- Output the **complete** passage and question text, and nothing else.
+- If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.`
+      ).then((response) => {
+        sectionQuestion.innerHTML = marked.parse(response.replace("\n", "\n\n"));
+        Test.Questions.questions.push({
+          question: response,
+          answer: sectionTextbox,
+          response: sectionResponse,
+        });
+        this.checkGenerationFinished();
+      });
   }
 }
 
@@ -302,10 +368,12 @@ export class Test {
     console.log("Test is done!");
     Test.disable();
     this.ActionButton.disabled = true;
+
     this.Questions.questions.forEach((e) => {
       generated++;
       e.response.innerHTML = /*html*/ `<span class="loader"></span>Response generation in progress...`;
 
+      if (e.skill != "writing") return;
       getAIResponse(`Generate a helpful review for the following answer:\n
 ${e.answer.value}\n
 The question is:\n
