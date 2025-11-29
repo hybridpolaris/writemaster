@@ -58,7 +58,7 @@ export class Timer {
 
   /**
    * *Sets* the timer, but *doesn't start* it
-   * @param {number} time In milliseconds 
+   * @param {number} time In seconds 
    */
   static set(time) {
     this.timeLeft = Date.now() + 1000 * time;
@@ -249,44 +249,46 @@ Requirements:
    * @param {string} test Test name
    * @param {number} from Starting question
    * @param {number} to Ending question
-   * @param {"true_false_not_given" |
+   * @param {{[["true_false_not_given" |
    *         "matching_information" |
    *         "short_answer" |
    *         "sentence_completion" |
    *         "matching_features" |
    *         "matching_headings" |
    *         "multiple_choice" |
-   *         "summary_completion"} type Question type
+   *         "summary_completion"]: number]}} type Question type
    */
   static generateIELTSReading(name, test, from, to, type) {
     this.questionsLeftToGenerate++;
     const section = document.createElement("div");
     const sectionTitle = document.createElement("h3");
     const sectionQuestion = document.createElement("p");
-    const sectionTextbox = document.createElement("div");
+    const sectionAnswer = document.createElement("div");
     const sectionResponse = document.createElement("p");
     section.className = "section";
     sectionTitle.innerText = name;
 
     const questionTypes = {
-      "true_false_not_given": "True / False / Not Given. **Required format:** \`[Question Number]. [Question]. \`",
-      "matching_information": "Match statements (not headings) to paragraphs. **Required format:** \`[Question number]. [Capital letter for each statement]-[Statement]. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
-      "matching_headings": "Match headings (not statements) to paragraphs. **Required format:** \`[Question number]. [Question]. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
-      "matching_features": "Match features (not headings or statements) to statements/attributes. **Required format:** \`Given these statements: \n[Capital letter for each statement]. [Statement].\` \`[Question number]. [Feature].\` Remember to say \`Match each statement to ONE feature.\` in question requirement",
-      "summary_completion": "Complete a given summary using words from the passage. **Give a summary of the passage with some keywords replaced with this required format:** \`[Question number]. ________\`",
-      "sentence_completion": "Complete a given sentence using words from the passage. **Give a sentence related to the passage in this *required format:* \`[Question number]. [Sentence]\` with some keywords replaced with this:** \`________\` Remember to say \`Fill in the blanks using words from the passage using NO MORE THAN THREE WORDS\` in the question requirement.",
-      "multiple_choice": "Multiple choice question. **Required format:** \`[Question number]. [Question]?\` \`[A, B, C or D]. [Choice].\`",
-      "short_answer": "Answer questions using NO MORE THAN THREE WORDS using words from the passage. **Required format: \`[Question number]. [Question]? \`**"
+      "true_false_not_given": "True / False / Not Given. **Required format:** \`{Question number}. {Question}. \`",
+      "matching_information": "Match statements (not headings) to paragraphs. **Required format:** \`{Question number}. {Capital letter for each statement}-{Statement}. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
+      "matching_headings": "Match headings (not statements) to paragraphs. **Required format:** \`{Question number}. {Question}. \` Mark each paragraph with a lowercase roman numberal (e.g. i, ii, vi, ...) when generating them.",
+      "matching_features": "Match features (not headings or statements) to statements/attributes. **Required format:** \`Given these statements: \n{Capital letter for each statement}. {Statement}.\` \`{Question number}. {Feature}.\`",
+      "summary_completion": "Complete a given summary using words from the passage. **Give a summary of the passage with some keywords replaced with this required format:** \`[...] {Question number}. ________ [...]\` Remember, 8 exact underscores.",
+      "sentence_completion": "Complete a given sentence using words from the passage. **Give a sentence related to the passage in this *required format:* \`{Question number}. {Sentence}\` with some keywords replaced with this:** \`________\` Remember, 8 exact underscores. **ONE blank per question, and each blank can have <= 3 words.**",
+      "multiple_choice": "Multiple choice question. **Required format:** \`{Question number}. {Question}?\` \`[A, B, C or D]. [Choice].\`",
+      "short_answer": "Answer questions using NO MORE THAN THREE WORDS using words from the passage. **Required format: \`{Question number}. {Question}? \`**"
     }
 
     getAIResponse(
         `Generate a ${test} ${name} question.
     
 Requirements:
-- Output **only** the question text and its required reading passage**. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
-- The response **must** begin with the full reading passage, followed by a \`---\` horizontal line, followed by the question(s).
+- Output **only** the question text and its required reading passage. Do **not** include titles, explanations, tips, instructions, greetings, closings, or meta commentary.
+- The response **must** begin with the full reading passage, followed by a \`---\` horizontal line, followed by the question(s). Use a \`---\` **ONLY** between each ***different* question types. Questions of same type HAS to be with eachother.**
 - Produce **only** reading questions numbered from ${from} to ${to}. Do **not** generate any questions outside this range.
-- The question type is: ${questionTypes[type]}. Remember to say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test)
+- The question types and amount are: ${
+  Object.entries(type).map(([ques, amount]) => `${amount} ${questionTypes[ques]}`).join(' ')
+}. Remember to say the question requirement, like "Pick TRUE, FALSE or NOT GIVEN for each of the given statements" (word it like in an actual test).
 - The passage must be original, complete, and fully self-contained.
 - Do not summarize, shorten, merge, or omit any parts of the selected questions.
 - Ensure every selected question and every answer option (if any) appears in full.
@@ -294,16 +296,69 @@ Requirements:
 - The passage and questions must be fully self-contained and formatted exactly like a standard ${test} ${name} prompt.
 - Do not add anything before or after the passage + question text.
 - Output the **complete** passage and question text, and nothing else.
-- If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.`
-      ).then((response) => {
-        sectionQuestion.innerHTML = marked.parse(response.replace("\n", "\n\n"));
+- If the response is long, continue until all required content is produced. Do **not** stop early or truncate the output.
+- ***Note:*** Follow exactly, do not add stuff we did not ask. Treat this like you're generating for a regex algorithm to scan; if you use the wrong format, it doesn't work.`
+    ).then((response) => {
+      const parts = response.replace("\n", "\n\n").split("---").concat("\n");
+      let i = 1;
+      Object.entries(type).forEach(([questionType, amount]) => {
+        sectionQuestion.innerHTML = marked.parse(parts[0].concat("\n"));
+        
+        if (questionType == "true_false_not_given") {
+          sectionAnswer.appendChild(document.createElement("hr"));
+          const questions = [...parts[i].matchAll(/\d\. .+\n/ig)];
+          const questionReq = document.createElement("p");
+          questionReq.innerHTML = "<br>Pick TRUE, FALSE or NOT GIVEN for each of the following statements.";
+          sectionAnswer.appendChild(questionReq);
+
+          let j = 0
+          questions.forEach(question => {
+            const questionElement = document.createElement("p");
+            questionElement.innerHTML = question[0].trim().concat(`\
+              <div class="tfng" style="margin-left: 2.5rem;"><input type="radio" name="${questionType}-${i}-${j}" id="t" /><span class="tfng_inner">T</span></div>\
+              <div class="tfng"><input type="radio" name="${questionType}-${i}-${j}" id="f" /><span class="tfng_inner">F</span></div>\
+              <div class="tfng"><input type="radio" name="${questionType}-${i}-${j}" id="ng" /><span class="tfng_inner">NG</span></div>`);
+            sectionAnswer.appendChild(questionElement);
+            j++;
+          });
+          
+          sectionAnswer.appendChild(document.createElement("br"));
+        }
+
+        if (questionType == "sentence_completion") {
+          sectionAnswer.appendChild(document.createElement("hr"));
+          const questions = [...parts[i].matchAll(/\d\. .+\n/ig)];
+          const questionReq = document.createElement("p");
+          questionReq.innerHTML = "<br>Fill in the blanks using words from the passage using NO MORE THAN THREE WORDS.";
+          sectionAnswer.appendChild(questionReq);
+
+          let j = 0
+          questions.forEach(question => {
+            const questionElement = document.createElement("p");
+            questionElement.innerHTML = question[0].trim().replace(/_+/, '<div class="inline" contenteditable="true"></div>');
+            sectionAnswer.appendChild(questionElement);
+            j++;
+          });
+          
+          sectionAnswer.appendChild(document.createElement("br"));
+        }
+
         Test.Questions.questions.push({
           question: response,
-          answer: sectionTextbox,
+          answer: sectionAnswer,
           response: sectionResponse,
         });
-        this.checkGenerationFinished();
-      });
+
+        i++;
+      })
+      this.checkGenerationFinished();
+    });
+    section.appendChild(sectionTitle);
+    section.appendChild(sectionQuestion);
+    section.appendChild(sectionAnswer);
+    section.appendChild(sectionResponse);
+
+    document.getElementById("test").appendChild(section);      
   }
 }
 

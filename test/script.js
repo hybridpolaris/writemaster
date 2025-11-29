@@ -166,11 +166,17 @@ if (testType != "toeic") {
     Test.Questions.generateWriting("Writing Task 1", translationKeys[testType]);
     time += 20 * 60; // 20 minutes
   }
-
+  
   if (testIncludes.includes("writing2")) {
     Test.Questions.generateWriting("Writing Task 2", translationKeys[testType]);
     time += 40 * 60; // 40 minutes
   }
+  
+  if (testIncludes.includes("test")) {
+    Test.Questions.generateIELTSReading("Reading Section 1 [Passage 1]", translationKeys[testType], 1, 5, {"true_false_not_given": 3, "sentence_completion": 2});
+    time += 60 * 60;
+  }
+
   Test.Timer.set(time);
 } else {
   // TOEIC test generation logic
