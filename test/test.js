@@ -48,6 +48,33 @@ if (
   }
   return { h: header, b: body, c: WillChart };
 }*/
+
+/*function parseTable(e) {
+  //console.log(header);
+  //console.log(body);
+
+  let header = e.header;
+
+  let body = e.rows;
+  header = header.map((e) => e.text);
+  let type = "number";
+  body = body.map((m) => {
+    return m.map((n) => {
+      if (isNaN(+n.text)) {
+        type = "string";
+      }
+      return n.text;
+    });
+  });
+  let WillChart = false;
+  if (type == "number") {
+    body = body.map((m) => {
+      return m.map((n) => +n);
+    });
+    WillChart = Math.random() >= 0.4;
+  }
+  return { h: header, b: body, c: WillChart };
+}*/
 function parseTable(e) {
   /*GPT-4: Do you trust me?
   Me, Stonkalyasatone: With every cell of my body.
