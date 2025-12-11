@@ -161,14 +161,29 @@ if (testType != "toeic") {
 
     time += 60 * 60; // 60 minutes
   }
-
-  if (testIncludes.includes("writing1")) {
-    Test.Questions.generateWriting("Writing Task 1", translationKeys[testType]);
-    time += 20 * 60; // 20 minutes
+  if (testType == "ielts_gen") {
+    if (testIncludes.includes("writing1")) {
+      Test.Questions.generateWriting(
+        "Writing Task 1 (Write a reply to a situation)",
+        translationKeys[testType]
+      );
+      time += 20 * 60; // 20 minutes
+    }
+  } else if (testType == "ielts_acad") {
+    if (testIncludes.includes("writing1")) {
+      Test.Questions.generateWriting(
+        "Writing Task 1 (Describe and compare data from a chart)",
+        translationKeys[testType]
+      );
+      time += 20 * 60; // 20 minutes
+    }
   }
 
   if (testIncludes.includes("writing2")) {
-    Test.Questions.generateWriting("Writing Task 2", translationKeys[testType]);
+    Test.Questions.generateWriting(
+      "Writing Task 2 (Written Essay)",
+      translationKeys[testType]
+    );
     time += 40 * 60; // 40 minutes
   }
   Test.Timer.set(time);

@@ -476,7 +476,7 @@ body.walo {
 
 .option:hover {
   background-color: var(--accent-color-hover);
-  /*color:#fff;*/
+  color:#000;
   cursor: pointer;
 }
 .selected.option {
@@ -545,6 +545,16 @@ option:hover {
   border: 1px solid var(--accent-color);
   color: #fff;
 }
+.sb:hover > .sb_inner {
+  background-color: var(--accent-color-hover);
+  border: 1px solid var(--accent-color-hover);
+  color:#000;
+}
+.sb:hover > input:checked + .sb_inner {
+  background-color: var(--accent-color-button-pressed);
+  border: 1px solid var(--accent-color-button-pressed);
+  color: #fff;
+}
 .center {
   display: flex;
   justify-content: center;
@@ -595,7 +605,12 @@ option:hover {
 .switch input:checked + .slider {
   background-color: var(--accent-color);
 }
-
+.switch input:hover + .slider {
+  background-color: var(--accent-color-hover);
+}
+.switch input:checked:hover + .slider {
+  background-color: var(--accent-color-button-pressed);
+}
 .switch input:focus + .slider {
   box-shadow: 0 0 1px var(--accent-color);
 }
@@ -613,11 +628,12 @@ input:checked + .slider:before {
   -webkit-appearance: none;
   appearance: none;
   background: var(--color-interface-base);
+  transition: 100ms;
 }
 .slider_range::-webkit-slider-thumb {
   height: 25px;
   width: 25px;
-  color: var(--accent-color);
+  /*color: var(--accent-color);*/
   border-radius: 50%;
   background: var(--accent-color);
   cursor: pointer;
@@ -627,12 +643,20 @@ input:checked + .slider:before {
 .slider_range::-moz-range-thumb {
   height: 25px;
   width: 25px;
-  color: var(--accent-color);
+  /*color: var(--accent-color);*/
   border-radius: 50%;
   background: var(--accent-color);
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+}
+.slider_range::-webkit-slider-thumb:hover {
+  /*color: var(--accent-color-button-pressed);*/
+  background-color: var(--accent-color-button-pressed);
+}
+.slider_range::-moz-range-thumb:hover {
+  /*color: var(--accent-color-button-pressed);*/
+  background-color: var(--accent-color-button-pressed);
 }
 .slider_range:disabled::-webkit-slider-thumb {
   opacity: 70%;

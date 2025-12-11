@@ -101,6 +101,9 @@ function li_nanpa(x) {
       return false;
     }
   }
+  if(1950<=+x&&+x<=2030){
+    return false;
+  }
   return true;
 }
 function tawa_nanpa(x) {
@@ -118,6 +121,9 @@ function tawa_nanpa(x) {
     } else {
       return x;
     }
+  }
+  if(1950<=+x&&+x<=2030){
+    return x;
   }
   return +x;
 }
